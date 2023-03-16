@@ -1,6 +1,7 @@
 import React from 'react';
 import Box from "@mui/material/Box";
 import './Home.css'
+import Facility from "./Facility"
 
 
 function Home() {

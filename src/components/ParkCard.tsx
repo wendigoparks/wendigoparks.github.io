@@ -14,11 +14,14 @@ const ParkCard = (props: any): JSX.Element => {
     // Example Park JSON:
     /*
     {
+        "id": "12345" --> just generate UUIDs for each park
         "name": "caboose park",
         "state": "Virginia",
         "county": "Montgomery",
         "address": "920 Turner St NE, Blacksburg, VA 24060",
         "imageURL": "https://i0.wp.com/stepintoblacksburg.org/wp-content/uploads/2019/03/caboose_park-lg.jpg?fit=2400%2C1600&ssl=1",
+        "facilites: [{...}, {...}]" each park has an array of facilites like tennis courts, skate park, frisbee golf, 
+            etc each of which can have a calendar
     }
     */
     // Props.park must be given:
@@ -30,7 +33,7 @@ const ParkCard = (props: any): JSX.Element => {
             {/*Paper gives the elevated look*/}
           <Paper elevation={8} >
             <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea>
+                <CardActionArea onClick={() => {props.parkClicked(props.park.id)}}>
                     <CardMedia
                         component="img"
                         height="140"
@@ -45,11 +48,11 @@ const ParkCard = (props: any): JSX.Element => {
                             Address: {props.park.address}
                         </Typography>
                         <div className="CityStateFlexBox" style={{display:'flex'}}>
-                            <Typography variant="body2" color="text.secondary">
-                                County: {props.park.county}
+                            <Typography variant="body2" color="text.secondary" style={{paddingRight:10}}>
+                                County: {props.park.county} {" "}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                                State: {props.park.state}
+                                 State: {props.park.state}
                             </Typography>
                         </div>
                     </CardContent>
