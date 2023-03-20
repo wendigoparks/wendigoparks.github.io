@@ -5,6 +5,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import React from "react"
+import { Navigate, useNavigate } from 'react-router-dom';
 
 // Create a card for a single park to appear on the search result page.
 // Clicking the card for a page can navigate the user to a new page just
@@ -28,12 +29,18 @@ const ParkCard = (props: any): JSX.Element => {
     // Set each value with a default if not given in props.park
    const name: String = props.park.name ? props.park.name : "Untitled Park";
 
+   // Allows to switch pages to a specific park page and supply the park id 
+   const navigate = useNavigate();
+
     return (
         <div style={{padding: '25px'}}>
             {/*Paper gives the elevated look*/}
           <Paper elevation={8} >
             <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea onClick={() => {props.parkClicked(props.park.id)}}>
+                <CardActionArea onClick={() => {
+                    console.log("Navigating to: " + `/Park/${props.park.id}`);
+                    navigate(`/park/${props.park.id}`);
+                    }}>
                     <CardMedia
                         component="img"
                         height="140"

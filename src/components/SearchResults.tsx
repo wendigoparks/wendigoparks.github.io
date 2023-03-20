@@ -104,36 +104,34 @@ const SearchResults = (props: any): JSX.Element => {
     return (
         <div style={{background:'#c7f1c4'}}>
             {/* <SearchAppBar /> If we wanted to change the top bar by the page the new variation would go here */}
-            {   /* Show selected park page once a park is clicked, or show all parks that match the search results
-                    if none are selected */ 
-                Object.keys(selectedPark).length != 0 ? 
-                <Park park={selectedPark} leaveParkView={leaveParkView} />
-                : 
-                <div>
-                    <h1>Parks matching your search:</h1>
-                    {
-                        parks != null ?
-                        <div className="ParkCardFlexBox" style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}>
-                            {
-                                parks.map((park: any) => (
-                                    <ParkCard 
-                                        park={park} 
-                                        key={park.id}  
-                                        parkClicked={parkClicked}
-                                    />
-                                ))
-                            }
-                        </div>
-                        :
+            {   /* Show all parks that match the search results */ }
+            <div>
+                <h1>Parks matching your search:</h1>
+                {
+                    parks != null ?
+                    <div className="ParkCardFlexBox" style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        {
+                            parks.map((park: any) => (
+                                <ParkCard 
+                                    park={park} 
+                                    key={park.id}  
+                                    parkClicked={parkClicked}
+                                />
+                            ))
+                        }
+                    </div>
+                    :
+                    <div>
                         <h1> No Matching Parks Were Found </h1>
-                    }
-                </div>
-            }
+                        <img src = "https://content.presentermedia.com/files/clipart/00007000/7644/emotion_head_sad_frown_800_wht.jpg" />
+                    </div>
+                }
+            </div>
         </div>
     )
 }

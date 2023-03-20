@@ -27,9 +27,12 @@ const Facility = (props: any): JSX.Element => {
     */
 
     return (
-        <div>
-            <h1>{props.facility.name} at {props.parkName}</h1>
-            <h1>Category is: {props.facility.category}</h1>
+        <div className="Facility" style={{backgroundColor:'lightblue', border:'3px solid'}}>
+            <span> 
+                {/* Display icon for category, as well as facility information and the calendar */}
+                <h1>Category is: {props.facility.category} Name: {props.facility.name}</h1> 
+            </span>
+           
         </div>
     )
 }
