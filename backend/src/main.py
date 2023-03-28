@@ -23,11 +23,6 @@ def get_db():
         db.close()
 
 
-@app.get("/", include_in_schema=False)
-def redirect_to_docs():
-    return RedirectResponse(url="/docs")
-
-
 @app.get("/parks/", response_model=list[schemas.Park])
 def read_parks(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     parks = crud.get_parks(db=db, skip=skip, limit=limit)
