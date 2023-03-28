@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import {alpha, InputBase, styled} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 
-const pages = ['Home', 'Parks'];
+const pages = ['Home', 'Parks', 'Add Park'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Search = styled('div')(({ theme }) => ({

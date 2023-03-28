@@ -1,10 +1,12 @@
 import ParkCard from "./ParkCard"
 import React from "react"
-import Park from "./Park";
-import { useState } from "react";
 
 
 const SearchResults = (props: any): JSX.Element => {
+
+    const areParksAreValid = (parks: any) => {
+        return true; // Array.isArray(parks) && parks[0] && parks[0].name;
+    }
 
     // For now display this static data, but in the future receive an array of JSONS
     // of parks that meet the search criteria ie props.foundParks
@@ -12,7 +14,7 @@ const SearchResults = (props: any): JSX.Element => {
     // TODO set up to grab only a certain amount per page (~20) and allow switching pages
 
     // TODO set up default images if not given
-    const parks = [
+    const parks = areParksAreValid(props.parks) ? props.parks : [
         {
             "id": 1,
             "name": "caboose park",
@@ -71,35 +73,6 @@ const SearchResults = (props: any): JSX.Element => {
             "imageURL": "https://i0.wp.com/stepintoblacksburg.org/wp-content/uploads/2019/03/caboose_park-lg.jpg?fit=2400%2C1600&ssl=1",
         }
     ]
-    
-    // Holds value of the selected park to display, if no park is selected all parks
-    // that were searched for will be shown
-    const [selectedPark, setSelectedPark] = useState({});
-
-    const parkClicked = (parkID: number): void => {
-        // when a park is clicked it passes the park id passed to it to this function,
-        // which can then find the corresponding park and set it to be the value for selectedPark. 
-        let matchingPark: any = null;
-        parks.forEach(park => {
-            if (park.id === parkID) {
-                matchingPark = park;
-            }
-        }); 
-
-        // Now selectedPark will display rather than the park cards. 
-        console.log("park clicked called park is:")
-        if (matchingPark != null) {
-            setSelectedPark(matchingPark);
-        } else {
-            alert("Unable to display the selected park");
-        }
-    }
-
-    const leaveParkView = (): void => {
-        // return selectedPark to an empty JSON so that all searched for parks will be displayed again
-        setSelectedPark({});
-        console.log("leave park view called")
-    }
 
     return (
         <div style={{background:'#c7f1c4'}}>
@@ -120,7 +93,6 @@ const SearchResults = (props: any): JSX.Element => {
                                 <ParkCard 
                                     park={park} 
                                     key={park.id}  
-                                    parkClicked={parkClicked}
                                 />
                             ))
                         }
@@ -128,7 +100,7 @@ const SearchResults = (props: any): JSX.Element => {
                     :
                     <div>
                         <h1> No Matching Parks Were Found </h1>
-                        <img src = "https://content.presentermedia.com/files/clipart/00007000/7644/emotion_head_sad_frown_800_wht.jpg" />
+                        <img src = "https://content.presentermedia.com/files/clipart/00007000/7644/emotion_head_sad_frown_800_wht.jpg" alt="Park" />
                     </div>
                 }
             </div>
