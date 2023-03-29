@@ -13,7 +13,7 @@ const SearchResults = (props: any): JSX.Element => {
 
     // TODO set up to grab only a certain amount per page (~20) and allow switching pages
 
-    // TODO set up default images if not given
+    // TODO set up default parks if none in database?
     const parks = areParksAreValid(props.parks) ? props.parks : [
         {
             "id": 1,
@@ -21,7 +21,7 @@ const SearchResults = (props: any): JSX.Element => {
             "state": "Virginia",
             "county": "Montgomery",
             "address": "920 Turner St NE, Blacksburg, VA 24060",
-            "imageURL": "https://i0.wp.com/stepintoblacksburg.org/wp-content/uploads/2019/03/caboose_park-lg.jpg?fit=2400%2C1600&ssl=1",
+            "image_url": "https://i0.wp.com/stepintoblacksburg.org/wp-content/uploads/2019/03/caboose_park-lg.jpg?fit=2400%2C1600&ssl=1",
             "facilities": [{
                     "id":1,
                     "parkID":1,             // ParkID should just be the park that a specific facility belongs to
@@ -46,7 +46,7 @@ const SearchResults = (props: any): JSX.Element => {
             "state": "Virginia",
             "county": "Montgomery",
             "address": "920 Turner St NE, Blacksburg, VA 24060",
-            "imageURL": "https://i0.wp.com/stepintoblacksburg.org/wp-content/uploads/2019/03/caboose_park-lg.jpg?fit=2400%2C1600&ssl=1",
+            "image_url": "https://i0.wp.com/stepintoblacksburg.org/wp-content/uploads/2019/03/caboose_park-lg.jpg?fit=2400%2C1600&ssl=1",
         },
         {
             "id": 3,
@@ -54,7 +54,7 @@ const SearchResults = (props: any): JSX.Element => {
             "state": "Virginia",
             "county": "Montgomery",
             "address": "920 Turner St NE, Blacksburg, VA 24060",
-            "imageURL": "https://i0.wp.com/stepintoblacksburg.org/wp-content/uploads/2019/03/caboose_park-lg.jpg?fit=2400%2C1600&ssl=1",
+            "image_url": "https://i0.wp.com/stepintoblacksburg.org/wp-content/uploads/2019/03/caboose_park-lg.jpg?fit=2400%2C1600&ssl=1",
         },
         {
             "id": 4,
@@ -62,7 +62,7 @@ const SearchResults = (props: any): JSX.Element => {
             "state": "Virginia",
             "county": "Montgomery",
             "address": "920 Turner St NE, Blacksburg, VA 24060",
-            "imageURL": "https://i0.wp.com/stepintoblacksburg.org/wp-content/uploads/2019/03/caboose_park-lg.jpg?fit=2400%2C1600&ssl=1",
+            "image_url": "https://i0.wp.com/stepintoblacksburg.org/wp-content/uploads/2019/03/caboose_park-lg.jpg?fit=2400%2C1600&ssl=1",
         },
         {
             "id": 5,
@@ -70,7 +70,7 @@ const SearchResults = (props: any): JSX.Element => {
             "state": "Virginia",
             "county": "Montgomery",
             "address": "920 Turner St NE, Blacksburg, VA 24060",
-            "imageURL": "https://i0.wp.com/stepintoblacksburg.org/wp-content/uploads/2019/03/caboose_park-lg.jpg?fit=2400%2C1600&ssl=1",
+            "image_url": "https://i0.wp.com/stepintoblacksburg.org/wp-content/uploads/2019/03/caboose_park-lg.jpg?fit=2400%2C1600&ssl=1",
         }
     ]
 

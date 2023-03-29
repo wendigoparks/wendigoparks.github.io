@@ -14,7 +14,6 @@ import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import { allFacilities, facilitesToIcon, textArrayToSymbolArray } from "./FacilityIcons";
-//import SportsBasketballOutlinedIcon from '@mui/icons-material/SportsBasketballOutlined';
 
 
 const AddPark = (): JSX.Element => {
@@ -122,98 +121,134 @@ const AddPark = (): JSX.Element => {
 
     return (
         <div>
-            <h1>Add or edit a park</h1>
+            <h1>Add a new park</h1>
 
-            <Button onClick={() => validateAndSend()} variant="contained" disabled={!(parkName.trim()) || !(address.trim())} > 
+            <Button 
+                onClick={() => validateAndSend()} variant="contained" disabled={!(parkName.trim()) || !(address.trim())}
+            > 
                 Add Park
             </Button>
-            <Box
-                component="form"
-                sx={{
-                    '& > :not(style)': { m: 1, width: '25ch' },
-                }}
-                noValidate
-                autoComplete="off"
-            >
-                <TextField 
-                    id="outlined-basic" 
-                    label="Park Name *" 
-                    variant="outlined" 
-                    // color="success" could have focused text field a color other than blue
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        setParkName(event.target.value)} }
-                />
-                <TextField 
-                    id="outlined-basic" 
-                    label="Description" 
-                    variant="outlined" 
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        setDescription(event.target.value)} }
-                />
-                <TextField 
-                    id="outlined-basic" 
-                    label="Address *" 
-                    variant="outlined" 
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        setAddress(event.target.value)} }
-                />
-                <TextField 
-                    id="outlined-basic" 
-                    label="Phone Number" 
-                    variant="outlined" 
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        setPhoneNumber(event.target.value)} }
-                />
-                <TextField 
-                    id="outlined-basic" 
-                    label="Capacity" 
-                    variant="outlined" 
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        setCapacity(event.target.value)} }
-                />
-                <TextField 
-                    id="outlined-basic" 
-                    label="Link to Park Image" 
-                    variant="outlined" 
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        setParkImageURL(event.target.value)} }
-                />
-                <div>
-                <FormControl sx={{ m: 1, width: 300 }}>
-                    <InputLabel id="multiple-checkbox-label">Facilities</InputLabel>
-                    <Select
-                    labelId="multiple-checkbox-label"
-                    id="multiple-checkbox"
-                    multiple
-                    value={amenitiesValue}
-                    onChange={handleChange}
-                    input={<OutlinedInput label="Facilities" />}
-                    renderValue={(selected) => textArrayToSymbolArray(selected)}
-                    //MenuProps={MenuProps}
-                    >
-                    {allFacilities.map((facility) => (
-                        <MenuItem key={facility} value={facility}>
-                        <Checkbox checked={amenitiesValue.indexOf(facility) > -1} />
-                        <ListItemText primary={facility} />
-                        </MenuItem>
-                    ))}
-                    </Select>
-                </FormControl>
+            <div className="FormsAndPreview" style={{
+                display:'flex',
+                justifyContent:'space-around',
+                flexWrap:'wrap',
+                padding:20
+            }}>
+                <div className="AllForms" style={{
+                    display:'flex',
+                    flexDirection:'column',
+                    justifyContent:'center',
+                    alignContent: 'center'
+                }}>
+                    <div className="NameAndAddress" style={{
+                        display:'flex', 
+                        justifyContent: 'space-around', 
+                        alignContent: 'space-around',
+                        padding:10
+                    }}>
+                        <TextField 
+                            id="outlined-basic" 
+                            label="Park Name *" 
+                            variant="outlined" 
+                            // color="success" could have focused text field a color other than blue
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                setParkName(event.target.value)} }
+                        />
+                        <div style={{width: 20}}></div>
+                        <TextField 
+                            id="outlined-basic" 
+                            label="Address *" 
+                            variant="outlined" 
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                setAddress(event.target.value)} }
+                        />
+                    </div>
+                    <div className="DescriptionAndNumber" style={{
+                        display:'flex',  
+                        justifyContent: 'space-around', 
+                        alignContent: 'space-around',
+                        padding:10
+                    }}>
+                        <TextField 
+                            id="outlined-basic" 
+                            label="Description" 
+                            variant="outlined" 
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                setDescription(event.target.value)} }
+                        />
+                        <div style={{width: 20}}></div>
+                        <TextField 
+                            id="outlined-basic" 
+                            label="Phone Number" 
+                            variant="outlined" 
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                setPhoneNumber(event.target.value)} }
+                        />
+                    </div>
+                    <div className="CapacityAndImage" style={{
+                        display:'flex',  
+                        justifyContent: 'space-around', 
+                        alignContent: 'space-around',
+                        padding:10
+                    }}>
+                        <TextField 
+                            style={{backgroundColor:'white'}}
+                            id="outlined-basic" 
+                            label="Capacity" 
+                            variant="outlined" 
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                setCapacity(event.target.value)} }
+                        />
+                        <div style={{width: 20}}></div>
+                        <TextField 
+                            id="outlined-basic" 
+                            label="Link to Park Image" 
+                            variant="outlined" 
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                setParkImageURL(event.target.value)} }
+                        />
+                    </div>
+                    <div className="Facilities">
+                    <FormControl sx={{ m: 1, width: 465 }}>
+                        <InputLabel id="multiple-checkbox-label">Facilities</InputLabel>
+                        <Select
+                        labelId="multiple-checkbox-label"
+                        id="multiple-checkbox"
+                        multiple
+                        value={amenitiesValue}
+                        onChange={handleChange}
+                        input={<OutlinedInput label="Facilities" />}
+                        renderValue={(selected) => textArrayToSymbolArray(selected)}
+                        //MenuProps={MenuProps}
+                        >
+                        {allFacilities.map((facility) => (
+                            <MenuItem key={facility} value={facility}>
+                            <Checkbox checked={amenitiesValue.indexOf(facility) > -1} />
+                            <ListItemText primary={facility} />
+                            </MenuItem>
+                        ))}
+                        </Select>
+                    </FormControl>
+                    </div>
                 </div>
-            </Box>
-            <p> Your park will appear like this: </p>
-            <div style={{display:'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'}}>
-            <ParkCard park={{
-                "name": parkName,
-                "description": description.trim() ? description.trim() : defaultDescription,
-                "address": address,
-                "amenities": amenitiesValue ? amenitiesValue.join() : defaultAmenities,
-                "phone_nr": phone_nr.trim() ? phone_nr.trim() : defaultPhoneNumber,
-                "capacity": capacity.trim() ? capacity.trim() : defaultCapacity,
-                "image_url": image_url.trim() ? image_url.trim() : defaultImageUrl
-            }}/>
+            <div className="PreviewTextAndCard">
+                <div style={{display:'flex',
+                            flexDirection:'column',
+                            justifyContent: 'center',
+                            alignItems: 'center'}}
+                >
+                <p>Preview of the new Park</p>
+                <ParkCard park={{
+                    "name": parkName,
+                    "description": description.trim() ? description.trim() : defaultDescription,
+                    "address": address,
+                    "amenities": amenitiesValue ? amenitiesValue.join() : defaultAmenities,
+                    "phone_nr": phone_nr.trim() ? phone_nr.trim() : defaultPhoneNumber,
+                    "capacity": capacity.trim() ? capacity.trim() : defaultCapacity,
+                    "image_url": image_url.trim() ? image_url.trim() : defaultImageUrl
+                }}/>
+                </div>
+            </div>
             </div>
         </div>
     )
