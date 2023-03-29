@@ -11,7 +11,7 @@ import ParkCard from "./ParkCard";
 const AddPark = (): JSX.Element => {
 
     // Endpoint to send POST request to backend
-    const addParkEndpoint = "https://posthere.io/a800-4e6d-aa31"; // "https://localhost:8000/park";
+    const addParkEndpoint = "http://127.0.0.1:8000/park"; // "https://localhost:8000/park";
 
     // Default values for non-required fields if an invalid
     // input is given:
@@ -60,7 +60,11 @@ const AddPark = (): JSX.Element => {
 
             const requestOptions = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin':  'http://127.0.0.1:8000',
+                    'Access-Control-Allow-Methods': 'POST',
+                },
                 body: JSON.stringify(parkJson)
             };
             // Using Fetch API
