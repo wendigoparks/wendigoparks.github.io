@@ -237,7 +237,6 @@ const AddPark = (): JSX.Element => {
                             justifyContent: 'center',
                             alignItems: 'center'}}
                 >
-                <p>Preview of the new Park</p>
                 <ParkCard park={{
                     "name": parkName,
                     "description": description.trim() ? description.trim() : defaultDescription,
