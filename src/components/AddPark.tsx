@@ -6,6 +6,15 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
 import ParkCard from "./ParkCard";
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import ListItemText from '@mui/material/ListItemText';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
+import { allFacilities, facilitesToIcon, textArrayToSymbolArray } from "./FacilityIcons";
+//import SportsBasketballOutlinedIcon from '@mui/icons-material/SportsBasketballOutlined';
 
 
 const AddPark = (): JSX.Element => {
@@ -36,10 +45,20 @@ const AddPark = (): JSX.Element => {
     const [parkName, setParkName] = React.useState('');
     const [description, setDescription] = React.useState('');
     const [address, setAddress] = React.useState('');
-    const [amenities, setAmenities] = React.useState('');
     const [phone_nr, setPhoneNumber] = React.useState('');
     const [capacity, setCapacity] = React.useState('');
     const [image_url, setParkImageURL] = React.useState('');
+
+    // After user successfully adds a park reset all of the forms
+    const resetForms = () => {
+        setParkName("");
+        setDescription("");
+        setAddress("");
+        setPhoneNumber("");
+        setCapacity("");
+        setParkImageURL("");
+        setAmenitiesValue([]);
+    }
 
     const validateAndSend = () => {
         // Make sure necessary park data is provided IE
@@ -52,7 +71,7 @@ const AddPark = (): JSX.Element => {
                 "name": parkName,
                 "description": description.trim() ? description.trim() : defaultDescription,
                 "address": address,
-                "amenities": amenities.trim() ? amenities.trim() : defaultAmenities,
+                "amenities": amenitiesValue ? amenitiesValue.join() : defaultAmenities,
                 "phone_nr": phone_nr.trim() ? phone_nr.trim() : defaultPhoneNumber,
                 "capacity": capacity.trim() ? capacity.trim() : defaultCapacity,
                 "image_url": image_url.trim() ? image_url.trim() : defaultImageUrl
@@ -72,7 +91,9 @@ const AddPark = (): JSX.Element => {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
-                // Handle data
+                // successfully posted! clear fields and alert user
+                resetForms();
+                alert("Congratulations the park has been successfully added!");
             })
             .catch((err) => {
                 console.log(err.message);
@@ -83,19 +104,28 @@ const AddPark = (): JSX.Element => {
         }
     }
 
+    
+
+    const [amenitiesValue, setAmenitiesValue] = React.useState<string[]>([]);
+
+    const handleChange = (event: SelectChangeEvent<typeof amenitiesValue>) => {
+        const {
+        target: { value },
+        } = event;
+        setAmenitiesValue(
+        // On autofill we get a stringified value.
+        typeof value === 'string' ? value.split(',') : value,
+        );
+    };
+
+
+
     return (
         <div>
             <h1>Add or edit a park</h1>
-            <h3> Focusing on talking to the backend here. Values entered are: </h3>
-            <p>Name: {parkName} </p>
-            <p>Description: {description} </p>
-            <p>address: {address} </p>
-            <p>amenities: {amenities} </p>
-            <p>phone number: {phone_nr} </p>
-            <p>capacity: {capacity} </p>
-            <img src={image_url} alt="Park"></img>
-            <Button onClick={() => validateAndSend()} variant="contained" > 
-                Send to backEnd
+
+            <Button onClick={() => validateAndSend()} variant="contained" disabled={!(parkName.trim()) || !(address.trim())} > 
+                Add Park
             </Button>
             <Box
                 component="form"
@@ -107,8 +137,9 @@ const AddPark = (): JSX.Element => {
             >
                 <TextField 
                     id="outlined-basic" 
-                    label="Park Name" 
+                    label="Park Name *" 
                     variant="outlined" 
+                    // color="success" could have focused text field a color other than blue
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         setParkName(event.target.value)} }
                 />
@@ -121,17 +152,10 @@ const AddPark = (): JSX.Element => {
                 />
                 <TextField 
                     id="outlined-basic" 
-                    label="Address" 
+                    label="Address *" 
                     variant="outlined" 
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         setAddress(event.target.value)} }
-                />
-                <TextField 
-                    id="outlined-basic" 
-                    label="Amenities" 
-                    variant="outlined" 
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        setAmenities(event.target.value)} }
                 />
                 <TextField 
                     id="outlined-basic" 
@@ -154,6 +178,28 @@ const AddPark = (): JSX.Element => {
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         setParkImageURL(event.target.value)} }
                 />
+                <div>
+                <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel id="multiple-checkbox-label">Facilities</InputLabel>
+                    <Select
+                    labelId="multiple-checkbox-label"
+                    id="multiple-checkbox"
+                    multiple
+                    value={amenitiesValue}
+                    onChange={handleChange}
+                    input={<OutlinedInput label="Facilities" />}
+                    renderValue={(selected) => textArrayToSymbolArray(selected)}
+                    //MenuProps={MenuProps}
+                    >
+                    {allFacilities.map((facility) => (
+                        <MenuItem key={facility} value={facility}>
+                        <Checkbox checked={amenitiesValue.indexOf(facility) > -1} />
+                        <ListItemText primary={facility} />
+                        </MenuItem>
+                    ))}
+                    </Select>
+                </FormControl>
+                </div>
             </Box>
             <p> Your park will appear like this: </p>
             <div style={{display:'flex',
@@ -163,10 +209,10 @@ const AddPark = (): JSX.Element => {
                 "name": parkName,
                 "description": description.trim() ? description.trim() : defaultDescription,
                 "address": address,
-                "amenities": amenities.trim() ? amenities.trim() : defaultAmenities,
+                "amenities": amenitiesValue ? amenitiesValue.join() : defaultAmenities,
                 "phone_nr": phone_nr.trim() ? phone_nr.trim() : defaultPhoneNumber,
                 "capacity": capacity.trim() ? capacity.trim() : defaultCapacity,
-                "imageURL": image_url.trim() ? image_url.trim() : defaultImageUrl
+                "image_url": image_url.trim() ? image_url.trim() : defaultImageUrl
             }}/>
             </div>
         </div>

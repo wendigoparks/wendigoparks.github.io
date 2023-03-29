@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import React from "react"
 import { useNavigate } from 'react-router-dom';
+import { textArrayToSymbolArray } from './FacilityIcons';
 
 // Create a card for a single park to appear on the search result page.
 // Clicking the card for a page can navigate the user to a new page just
@@ -33,32 +34,35 @@ const ParkCard = (props: any): JSX.Element => {
    const navigate = useNavigate();
 
     return (
-        <div style={{padding: '25px', width: '345px'}}>
+        <div style={{padding: '25px', width: '345px', height: '300px'}}>
             {/*Paper gives the elevated look*/}
           <Paper elevation={8} >
-            <Card sx={{ maxWidth: '345px' }}>
+            <Card sx={{ width: '345px', height: '300px'  }}>
                 <CardActionArea onClick={() => {
                     navigate(`/park/${props.park.id}`);
                     }}>
                     <CardMedia
                         component="img"
                         height="140"
-                        image={props.park.imageURL}
+                        image={props.park.image_url}
                         alt="photo of a park"
                     />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
                             {name}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Address: {props.park.address}
-                        </Typography>
-                        <div className="CityStateFlexBox" style={{display:'flex'}}>
-                            <Typography variant="body2" color="text.secondary" style={{paddingRight:10}}>
-                                County: {props.park.county} {" "}
+                        <div className="AddressPhoneFlexBox" style={{display:'flex', justifyContent:'space-between'}}>
+                            <Typography variant="body2">
+                                Address: {props.park.address}
                             </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                 State: {props.park.state}
+                            <Typography variant="body2" style={{paddingLeft:'5px'}}>
+                            ✆ {props.park.phone_nr}
+                            </Typography>
+                        </div>
+                        <div className="Amenities" style={{display:'flex'}}>
+                            <Typography variant="body2"  style={{paddingRight:10}}>
+                                {/* Make amenitites a list and then use this: Amenities: {textArrayToSymbolArray(props.park.amenities)} */}
+                                Amenities: {props.park.amenities}
                             </Typography>
                         </div>
                     </CardContent>
@@ -70,3 +74,4 @@ const ParkCard = (props: any): JSX.Element => {
 }
 
 export default ParkCard;
+

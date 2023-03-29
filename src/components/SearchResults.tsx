@@ -5,7 +5,7 @@ import React from "react"
 const SearchResults = (props: any): JSX.Element => {
 
     const areParksAreValid = (parks: any) => {
-        return true; // Array.isArray(parks) && parks[0] && parks[0].name;
+        return Array.isArray(parks) && parks[0] && parks[0].name;
     }
 
     // For now display this static data, but in the future receive an array of JSONS
