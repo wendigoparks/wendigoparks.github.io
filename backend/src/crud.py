@@ -21,9 +21,13 @@ def create_park(db: Session, park: schemas.ParkCreate):
     db.commit()
     db.refresh(db_park)
     return db_park
+        
 
 def find_park(db: Session, park_name: str):
     return db.query(models.Park).where(models.Park.name == park_name).first()
+
+def find_user(db: Session, username: str):
+    return db.query(models.User).where(models.User.username == username).first()
 
 def search_parks_by_name(db: Session, park_name: str):
     search = "%{}%".format(park_name)

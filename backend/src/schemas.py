@@ -10,9 +10,20 @@ class ParkBase(BaseModel):
     capacity: int | None = None
     image_url: str | None = None
 
+class UserBase(BaseModel):
+    username: str
+    email: str | None = None
+    full_name: str | None = None
+    disabled: bool | None = None
+    hashed_pswd: str | None = None
+
 class ParkCreate(ParkBase):
     pass
 
 class Park(ParkBase):
+    class Config:
+        orm_mode = True
+
+class User(UserBase):
     class Config:
         orm_mode = True

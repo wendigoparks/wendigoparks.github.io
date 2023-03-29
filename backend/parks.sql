@@ -7,3 +7,11 @@ CREATE TABLE IF NOT EXISTS parks (
     capacity INT,
     image_url VARCHAR(256)
 );
+
+CREATE TABLE IF NOT EXISTS users (
+	username VARCHAR(128) PRIMARY KEY,
+	email VARCHAR(128),
+	full_name VARCHAR(128),
+	disabled BOOL,
+	hashed_pswd VARCHAR(256)
+);
