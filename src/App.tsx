@@ -7,6 +7,7 @@ import Parks from "./components/Parks";
 import SearchResults from "./components/SearchResults";
 import Park from './components/Park';
 import AddPark from './components/AddPark';
+import Login from './components/Login';
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
                 <Route path="/add park" element={<AddPark/>} />
                 {/* Park path will be called with park id query parameter so that specific park can be retreived */}
                 <Route path="/Park/:id" element={<Park/>} />
+                <Route path="/Login" element={<Login/>} />
                 <Route path='*' element={<Navigate to='/Home' />} />
             </Routes>
         </Router>

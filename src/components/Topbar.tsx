@@ -7,6 +7,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import {alpha, InputBase, styled} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+import { userIsLoggedIn } from './Authentication';
 
 const pages = ['Home', 'Parks', 'Add Park'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -86,6 +87,25 @@ function ResponsiveAppBar() {
                                 {page}
                             </Button>
                         ))}
+                        {/* Hardcoding Login page so that it can double as My account button if user is logged in 
+                            TODO make this determined by user logged in status */}
+                        {
+                            userIsLoggedIn() ? 
+                            <Button
+                                href={"/login"}
+                                sx={{ my: 2, mx: 2, color: 'white', display: 'block', bgcolor: 'success.main' }}
+                                variant="contained"
+                            >
+                                Login
+                            </Button> :
+                            <Button
+                                href={"/page"}
+                                sx={{ my: 2, mx: 2, color: 'white', display: 'block', bgcolor: 'success.main' }}
+                                variant="contained"
+                            >
+                                My Account
+                            </Button>
+                        }
                     </Box>
 
                     <Search>
