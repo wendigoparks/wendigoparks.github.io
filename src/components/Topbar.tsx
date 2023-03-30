@@ -99,7 +99,7 @@ function ResponsiveAppBar() {
                                 Login
                             </Button> :
                             <Button
-                                href={"/page"}
+                                href={"/MyAccount"}
                                 sx={{ my: 2, mx: 2, color: 'white', display: 'block', bgcolor: 'success.main' }}
                                 variant="contained"
                             >

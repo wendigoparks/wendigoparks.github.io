@@ -124,7 +124,7 @@ const Login = () => {
         <h1>Login or Create a new Account!</h1>
             <div className="LoginForms" style={{
                 height:500,
-                maxWidth:500,
+                width:500,
                 display:'flex',
                 justifyContent: 'space-evenly',
                 flexDirection:'column'

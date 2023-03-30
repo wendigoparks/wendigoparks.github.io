@@ -2,7 +2,6 @@
 Allow users to add new parks or modify existing parks in the database
 */
 import React from "react";
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
 import ParkCard from "./ParkCard";
@@ -96,6 +95,7 @@ const AddPark = (): JSX.Element => {
             })
             .catch((err) => {
                 console.log(err.message);
+                alert("Unable to add park to the database")
             });
 
         } else {
