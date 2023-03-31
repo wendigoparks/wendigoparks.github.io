@@ -18,7 +18,8 @@ function App() {
             <Routes>
                 <Route path="/home" element={<Home/>} />
                 <Route path="/search" element={<SearchResults/>} />
-                <Route path="/parks" element={<Parks/>} />
+                <Route path="/parks/" element={<Parks/>} />
+                <Route path="/parks/:query" element={<Parks/>} />
                 <Route path="/add park" element={<AddPark/>} />
                 {/* Park path will be called with park id query parameter so that specific park can be retreived */}
                 <Route path="/Park/:id" element={<Park/>} />

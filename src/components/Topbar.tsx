@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import {alpha, InputBase, styled} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import { userIsLoggedIn } from './Authentication';
+import { useNavigate } from 'react-router-dom';
 
 const pages = ['Home', 'Parks', 'Add Park'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -52,7 +53,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-function ResponsiveAppBar() {
+const ResponsiveAppBar = () => {
+    
+    const [searchQuery, setSearchQuery] = React.useState("");
+    // navigate allows to switch pages and supply the search query in the url
+    const navigate = useNavigate();
+
+    const performSearch = () => {
+        // One idea is to just navigate to the parks page and pass the search query
+        // as a url parameter. Then the Parks code can fetch parks matching a search query
+        // if given, and matching all parks if not.
+        navigate(`/Parks/${searchQuery}`);
+
+    }
 
     return (
         <AppBar position="static" sx={{ bgcolor: "green" }}>
@@ -109,10 +122,18 @@ function ResponsiveAppBar() {
                     </Box>
 
                     <Search>
+                        <div onClick={() => performSearch()}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
+                        </div>
                         <StyledInputBase
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                performSearch();
+                                }
+                            }}
+                            onChange={e => setSearchQuery(e.target.value)}
                             placeholder="Search…"
                             inputProps={{ 'aria-label': 'search' }}
                         />

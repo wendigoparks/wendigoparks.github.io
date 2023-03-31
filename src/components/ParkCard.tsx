@@ -37,7 +37,7 @@ const ParkCard = (props: any): JSX.Element => {
         <div style={{padding: '25px', width: '345px', height: '300px'}}>
             {/*Paper gives the elevated look*/}
           <Paper elevation={8} >
-            <Card sx={{ width: '345px', height: '300px'  }}>
+            <Card>
                 <CardActionArea onClick={() => {
                     navigate(`/park/${props.park.id}`);
                     }}>
