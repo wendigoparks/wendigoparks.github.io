@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from passlib.hash import bcrypt
 
 
 class ParkBase(BaseModel):
@@ -27,3 +28,10 @@ class Park(ParkBase):
 class User(UserBase):
     class Config:
         orm_mode = True
+
+class UserCreate(UserBase):
+    password: str
+
+    def __init__(self, username: str, password: str, email: str | None = None, full_name: str | None = None, disabled: bool = False):
+        self.hashed_pswd = bcrypt.hash(password)
+
