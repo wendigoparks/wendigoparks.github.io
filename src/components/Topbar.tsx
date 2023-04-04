@@ -103,21 +103,21 @@ const ResponsiveAppBar = () => {
                         {/* Hardcoding Login page so that it can double as My account button if user is logged in 
                             TODO make this determined by user logged in status */}
                         {
-                            userIsLoggedIn() ? 
-                            <Button
-                                href={"/login"}
-                                sx={{ my: 2, mx: 2, color: 'white', display: 'block', bgcolor: 'success.main' }}
-                                variant="contained"
-                            >
-                                Login
-                            </Button> :
+                            userIsLoggedIn() ?
                             <Button
                                 href={"/MyAccount"}
                                 sx={{ my: 2, mx: 2, color: 'white', display: 'block', bgcolor: 'success.main' }}
                                 variant="contained"
                             >
                                 My Account
-                            </Button>
+                            </Button> :
+                            <Button
+                                href={"/login"}
+                                sx={{ my: 2, mx: 2, color: 'white', display: 'block', bgcolor: 'success.main' }}
+                                variant="contained"
+                            >
+                                Login
+                            </Button> 
                         }
                     </Box>
 

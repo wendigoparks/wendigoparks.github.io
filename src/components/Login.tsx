@@ -1,7 +1,7 @@
 import React from "react";
 import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
-import { checkPasswordRequirements, hashPassword } from "./Authentication";
+import { checkPasswordRequirements, hashPassword, saveUserLoggedIn } from "./Authentication";
 import { useNavigate } from "react-router-dom";
 
 /*
@@ -107,6 +107,7 @@ const Login = () => {
             .then((data) => {
                 console.log(data);
                 // successfully created account. Leave fields so they can log in.
+                saveUserLoggedIn('user new id', 'token123');
                 alert("Account created, you may now log in");
             })
             .catch((err) => {
