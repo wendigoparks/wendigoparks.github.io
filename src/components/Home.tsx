@@ -1,7 +1,5 @@
 import React from 'react';
-import Box from "@mui/material/Box";
 import './Home.css'
-import Facility from "./Facility"
 
 
 function Home() {
@@ -9,8 +7,8 @@ function Home() {
     return (
         <div className="middleBox">
             <h1>WenDiGo</h1>
-            <p>Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah</p>
-            <p>Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah</p>
+            <p>Maybe have buttons on home rather than all in top bar?</p>
+            <p>Could also use home to display parks near me or search settings</p>
         </div>
     );
 }

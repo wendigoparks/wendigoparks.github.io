@@ -3,7 +3,10 @@
 // friends of theirs and allow people to view other people's account through a page similar to this one, without the
 // acount modification features but with options for user profiles to be public or private.
 
+import { Button } from "@mui/material";
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { logOut } from "./Authentication";
 
 const MyAccount = () => {
 
@@ -11,7 +14,7 @@ const MyAccount = () => {
     const [userData, setUserData] = React.useState({'full_name':'George'});
 
     // url for endpoint to get user data
-    const getUserInfoUrl = "";
+    const getUserInfoUrl = "http://127.0.0.1:8000";
 
     // First get user information from database
     // This will run once on component mounting
@@ -24,7 +27,8 @@ const MyAccount = () => {
                 'Accept': 'application/json',
                 'Access-Control-Allow-Origin':  'http://127.0.0.1:8000',
                 'Access-Control-Allow-Methods': 'GET',
-                'Access-Control-Allow-Headers': 'Accept'
+                'Access-Control-Allow-Headers': 'Accept',
+                'Authorization':`Bearer ${localStorage.getItem("userToken")}`
             },
         };
         fetch(getUserInfoUrl, requestOptions )
@@ -37,9 +41,20 @@ const MyAccount = () => {
 
       }, [])
 
+    // Allows to switch pages to login screen on log out
+   const navigate = useNavigate();
+
     return (
         <div>
-            <p> Welcome {userData.full_name} </p>
+            <p> Welcome {userData.full_name} user id: {localStorage.getItem("userID")} </p>
+            <Button variant='contained' onClick={() => {
+                logOut();
+                navigate('/home');
+            }}>Log Out</Button>
+            <Button variant='contained' onClick={() => {
+                alert("Not implemented yet");
+            }}>Change Password</Button>
+            <p>Display user data here below:</p>
         </div>
     )
 }
