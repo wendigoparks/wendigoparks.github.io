@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator, Field
 from passlib.hash import bcrypt
 
 
@@ -15,8 +15,9 @@ class UserBase(BaseModel):
     username: str
     email: str | None = None
     full_name: str | None = None
-    disabled: bool | None = None
-    hashed_pswd: str | None = None
+    _disabled: bool = False
+    hashed_pswd: str
+
 
 class ParkCreate(ParkBase):
     pass
@@ -26,12 +27,12 @@ class Park(ParkBase):
         orm_mode = True
 
 class User(UserBase):
+    id: int
     class Config:
         orm_mode = True
 
+
 class UserCreate(UserBase):
-    password: str
 
-    def __init__(self, username: str, password: str, email: str | None = None, full_name: str | None = None, disabled: bool = False):
-        self.hashed_pswd = bcrypt.hash(password)
-
+    def __init__(self, username: str, hashed_pswd: str, email: str | None = None, full_name: str | None = None):
+        super().__init__(username=username, email=email, full_name=full_name, hashed_pswd=bcrypt.hash(hashed_pswd))

@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 
 from . import models, schemas
 
@@ -23,15 +24,39 @@ def create_park(db: Session, park: schemas.ParkCreate):
     return db_park
         
 
+def create_user(db: Session, user: schemas.UserCreate):
+    db_user = models.User(
+        username = user.username,
+        email = user.email,
+        full_name = user.full_name,
+        disabled = user._disabled,
+        hashed_pswd = user.hashed_pswd,
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+
+
 def find_park(db: Session, park_name: str):
     return db.query(models.Park).where(models.Park.name == park_name).first()
 
-def find_user(db: Session, username: str):
-    return db.query(models.User).where(models.User.username == username).first()
+
+
+
+def find_user(db: Session, username: str=None, email: str=None):
+    return db.query(models.User).where(or_(models.User.username == username, models.User.email == email)).first()
+
+
+
 
 def search_parks_by_name(db: Session, park_name: str):
     search = "%{}%".format(park_name)
     return db.query(models.Park).where(models.Park.name.like(search)).all()
+
+
+
 
 def update_park(db: Session, park_name: str, park: schemas.ParkCreate):
     db_park = db.query(models.Park).where(models.Park.name == park_name).first()
@@ -47,6 +72,9 @@ def update_park(db: Session, park_name: str, park: schemas.ParkCreate):
     db.commit()
     db.refresh(db_park)
     return db_park
+
+
+
 
 def delete_park(db: Session, park_name: str):
     db_park = db.query(models.Park).where(models.Park.name == park_name).first()
