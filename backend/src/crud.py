@@ -1,3 +1,4 @@
+from random import randint
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 
@@ -26,6 +27,7 @@ def create_park(db: Session, park: schemas.ParkCreate):
 
 def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(
+        id = randint(),
         username = user.username,
         email = user.email,
         full_name = user.full_name,

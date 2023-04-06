@@ -1,7 +1,7 @@
 import React from "react";
 import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
-import { checkPasswordRequirements, hashPassword, saveUserLoggedIn } from "./Authentication";
+import { checkPasswordRequirements } from "./Authentication";
 import { useNavigate } from "react-router-dom";
 
 /*
@@ -20,8 +20,8 @@ const Login = () => {
     // useEffect hook to navigate page to myAccount instead, probably unnecessary. 
 
     // Endpoints to send POST requests to backend
-    const loginEndpoint = "http://127.0.0.1:8000/login";
-    const createAccountEndpoint = "http://127.0.0.1:8000/create";
+    const loginEndpoint = "http://127.0.0.1:8000/token";
+    const createAccountEndpoint = "http://127.0.0.1:8000/users";
     
     // Allows us to navigate to the home page on successful login
     const navigate = useNavigate();
@@ -29,20 +29,17 @@ const Login = () => {
     // Login method to communicate with backend that an existing user is presenting their
     // credentials. 
     const login = () => {
-        // build request body with schema:
+        // build request body with format:
         /*
             username: str
             email: str | None = None
             full_name: str | None = None
-            disabled: bool | None = None
-            hashed_pswd: str | None = None
+            password: str | None = None
         */
         const userJson = {
             "username": username,
             "email": email,
-            "full_name": fullName.trim() ? fullName : "N/A",
-            "disabled": false,
-            "hashed_pswd": hashPassword(password)
+            "password": password
         }
 
         const requestOptions = {
@@ -89,8 +86,8 @@ const Login = () => {
                 "username": username,
                 "email": email,
                 "full_name": fullName.trim() ? fullName : "N/A",
-                "disabled": false,
-                "hashed_pswd": hashPassword(password)
+                // TODO TEMPORARY FIX, BACKEND SHOULD DO THE HASHING
+                "hashed_pswd": password
             }
             const requestOptions = {
                 method: 'POST',
@@ -107,7 +104,6 @@ const Login = () => {
             .then((data) => {
                 console.log(data);
                 // successfully created account. Leave fields so they can log in.
-                saveUserLoggedIn('user new id', 'token123');
                 alert("Account created, you may now log in");
             })
             .catch((err) => {
