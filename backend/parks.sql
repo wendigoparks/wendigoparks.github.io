@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS reservations (
     date DATE NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
-    user_id VARCHAR(36) NOT NULL,
+    user_id INTEGER NOT NULL,
     court_id VARCHAR(36) NOT NULL,
     group_size TINYINT,
     number_can_join TINYINT default 0,
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS reservations (
         REFERENCES courts(id)
         ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (user_id)
-        REFERENCES users(username)
+        REFERENCES users(id)
         ON UPDATE CASCADE ON DELETE CASCADE,
     INDEX(date),
     INDEX(court_id, date)
@@ -74,11 +74,11 @@ CREATE TABLE IF NOT EXISTS reservations (
 
 CREATE TABLE IF NOT EXISTS reservations_joined (
     id VARCHAR(36) PRIMARY KEY,
-    user_id VARCHAR(36) NOT NULL,
+    user_id INTEGER NOT NULL,
     group_size TINYINT,
     reservation_joined VARCHAR(36),
     FOREIGN KEY (user_id)
-        REFERENCES users(username)
+        REFERENCES users(id)
         ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (reservation_joined)
         REFERENCES reservations(id)
