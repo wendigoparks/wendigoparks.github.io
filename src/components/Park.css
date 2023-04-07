@@ -1,0 +1,21 @@
+.middleBoxP {
+    margin: auto;
+    height: 100%;
+    min-height: 100%;
+    width: 60%;
+    min-width: 400px;
+    box-sizing: border-box;
+    padding: 20px;
+    background: #ffffff;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    z-index: -1;
+}
+
+.parkImg {
+    width: 50vh;
+}
+
+span {
+    font-family: "Gill Sans MT";
+}

@@ -2,6 +2,11 @@
 import React from "react"
 import Facility from "./Facility";
 import { useNavigate, useParams } from "react-router-dom";
+import './Park.css'
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import Button from "@mui/material/Button";
+import {ButtonBase, Grid} from "@mui/material";
+import Typography from "@mui/material/Typography";
 
 const Park = (props: any): JSX.Element => {
 
@@ -86,6 +91,14 @@ const Park = (props: any): JSX.Element => {
         "facilities": []
     }
 
+    function toTitleCase(s: string) {
+        s = s.toLowerCase()
+            .split(' ')
+            .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+        return s;
+    }
+
     parks.forEach(parkJSON => {
         if (parkJSON.id.toString() === id) park = parkJSON;
     });
@@ -99,10 +112,37 @@ const Park = (props: any): JSX.Element => {
     // Need to decide if a facility modal would open in this react component, or if facilites would just open them themselves.
 
     return (
-        <div>
-            <button onClick={() => navigate(-1)}> Back </button>
-            <h1>{park.name}</h1>
-            <img src={park.imageURL} style={{width:300}} />
+        <div className="middleBoxP">
+            <Grid container spacing={2}>
+                <Grid item>
+                    <img alt="complex" src={park.imageURL} className={"parkImg"}/>
+                </Grid>
+                <Grid item xs={12} sm container>
+                    <Grid item xs container direction="column" spacing={2}>
+                        <Grid item>
+                            <Typography gutterBottom variant="h4" component="div">
+                                <span>{toTitleCase(park.name)}</span>
+                            </Typography>
+                            <Typography variant="body2" gutterBottom>
+                                <span>{park.address}</span>
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                <span>{park.county}, {park.state}</span>
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="body2">
+                                <span>Desc goes here</span>
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="contained" endIcon={<KeyboardReturnIcon />} onClick={() => navigate(-1)}>
+                            Back
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Grid>
 
             {/* Show all facilities conntected to this park and their calendars */}
             {
