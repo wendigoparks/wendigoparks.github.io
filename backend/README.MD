@@ -1,4 +1,4 @@
-## INSTALLATION INSTRUCTIONS
+## Installation Instructions
 Note that this program was written for Python 3.11, and these instructions assume a bash terminal
 First, create and enter a virtual environment:
 ```bash
@@ -17,7 +17,7 @@ This application also requires a MySQL database with the table which is created 
 MYSQL_USERNAME=not_root MYSQL_PASSWORD=not_root_password uvicorn src.main:app --reload
 ```
 
-## RUNNING API
+## Running API
 To run, first enter virtual environment, then use command:
 ```bash
 uvicorn src.main:app --reload
