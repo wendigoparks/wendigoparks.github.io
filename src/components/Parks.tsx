@@ -35,7 +35,7 @@ function Parks() {
             fetch(getAllParksUrl + query, requestOptions )
             .then(response => response.json())
             .then(data => {
-                console.log("Retrived the following data:\n");
+                console.log("Retrived the data trying to search:\n");
                 console.log(data);
                 // console.log(JSON.parse(data[0].body).name);
                 // Will need to process data so that parks ends up with an aray of park JSONs
@@ -56,7 +56,7 @@ function Parks() {
                 setParks(data);
             });
         }
-      }, [])
+      }, [query])
 
     return (
         <div>

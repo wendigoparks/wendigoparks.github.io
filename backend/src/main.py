@@ -176,8 +176,8 @@ async def find_park(park_name: str, db: Session = Depends(get_db)):
 
 
 @app.get("/parks/{park_name_contains}", response_model=list[schemas.Park])
-async def search_parks_by_name(park_name: str, db: Session = Depends(get_db)):
-    parks = crud.search_parks_by_name(db=db, park_name=park_name)
+async def search_parks_by_name(park_name_contains: str, db: Session = Depends(get_db)):
+    parks = crud.search_parks_by_name(db=db, park_name=park_name_contains)
     return parks
 
 
