@@ -14,24 +14,22 @@ const MyAccount = () => {
     const [userData, setUserData] = React.useState({'full_name':'George'});
 
     // url for endpoint to get user data
-    const getUserInfoUrl = "http://127.0.0.1:8000";
+    const getUserInfoUrl = "http://127.0.0.1:8000/users/me";
 
     // First get user information from database
     // This will run once on component mounting
     useEffect(() => {
         console.log('Retreiving user info from Backend...');
-        const requestOptions = {
-            method: 'GET',
-            headers: { 
-                'Access-Control-Allow-Credentials':'true',
+        fetch(getUserInfoUrl, {
+            method: 'GET', 
+            headers: { 'Access-Control-Allow-Credentials':'true',
                 'Accept': 'application/json',
                 'Access-Control-Allow-Origin':  'http://127.0.0.1:8000',
                 'Access-Control-Allow-Methods': 'GET',
                 'Access-Control-Allow-Headers': 'Accept',
-                'Authorization':`Bearer ${localStorage.getItem("userToken")}`
-            },
-        };
-        fetch(getUserInfoUrl, requestOptions )
+                'authjwt_cookie_samesite': 'none'},
+            credentials: 'include'
+        })
             .then(response => response.json())
             .then(data => {
                 console.log("Retrived the following data:\n");

@@ -28,16 +28,17 @@ def fake_hash_password(password: str):
     return "fakehashed" + password
 
 origins = [
-    "http://localhost:3000/",
+    "http://localhost:3000/*",
     "http://localhost",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=['http://localhost:3000'],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Set-Cookie", "Authenticate", 'Access-Control-Allow-Credentials', 'Accept',
+                    'Access-Control-Allow-Origin', 'Access-Control-Allow-Methods', 'Access-Control-Allow-Headers', 'credentials', 'authjwt_cookie_samesite']
 )
 
 
@@ -137,7 +138,7 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
     access_token = create_jwt_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True)  #set HttpOnly cookie in response
+    response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True, secure=True, samesite='none')  #set HttpOnly cookie in response
     return {"access_token": access_token, "token_type": "bearer"}
 
 

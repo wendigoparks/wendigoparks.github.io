@@ -34,10 +34,10 @@ const ParkCard = (props: any): JSX.Element => {
    const navigate = useNavigate();
 
     return (
-        <div style={{padding: '25px', width: '345px', height: '300px'}}>
+        <div style={{padding: '25px', width: '345px', maxHeight: '300px', minHeight: '300px'}}>
             {/*Paper gives the elevated look*/}
-          <Paper elevation={8} >
-            <Card>
+          <Paper elevation={8}  style={{height: '300px'}}>
+            <Card style={{height: '300px'}}>
                 <CardActionArea onClick={() => {
                     navigate(`/park/${props.park.id}`);
                     }}>
@@ -51,20 +51,16 @@ const ParkCard = (props: any): JSX.Element => {
                         <Typography gutterBottom variant="h5" component="div">
                             {name}
                         </Typography>
-                        <div className="AddressPhoneFlexBox" style={{display:'flex', justifyContent:'space-between'}}>
-                            <Typography variant="body2">
-                                Address: {props.park.address}
-                            </Typography>
-                            <Typography variant="body2" style={{paddingLeft:'5px'}}>
+                        <Typography variant="body2">
+                            Address: {props.park.address}
+                        </Typography>
+                        <Typography variant="body2" style={{paddingLeft:'5px'}}>
                             ✆ {props.park.phone_nr}
-                            </Typography>
-                        </div>
-                        <div className="Amenities" style={{display:'flex'}}>
-                            <Typography variant="body2"  style={{paddingRight:10}}>
+                        </Typography>
+                        <Typography variant="body2"  style={{paddingRight:10}}>
                                 {/* Make amenitites a list and then use this: Amenities: {textArrayToSymbolArray(props.park.amenities)} */}
-                                Amenities: {textArrayToSymbolArray(["basketball"])}
-                            </Typography>
-                        </div>
+                            {textArrayToSymbolArray(props.park.amenities ? props.park.amenities.split(',') : ["basketball"])}
+                        </Typography>
                     </CardContent>
                 </CardActionArea>
             </Card>

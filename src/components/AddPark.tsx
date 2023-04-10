@@ -76,24 +76,24 @@ const AddPark = (): JSX.Element => {
             }
 
             console.log("amenities looks like: \n" + amenitiesValue.join(','))
-
-            const requestOptions = {
+            // Using Fetch API
+            fetch(addParkEndpoint, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin':  'http://127.0.0.1:8000',
                     'Access-Control-Allow-Methods': 'POST',
-                    'Authorization': `Bearer ${localStorage.getItem("userToken")}`
                 },
-                body: JSON.stringify(parkJson)
-            };
-            // Using Fetch API
-            fetch(addParkEndpoint, requestOptions)
-            .then((response) => response.json())
+                body: JSON.stringify(parkJson),
+                credentials: 'include'
+            })
+            .then((response) => { 
+                if (!response.ok) {throw new Error(String(response.status)); }
+                else {return response.json(); } })
             .then((data) => {
                 console.log(data);
                 // successfully posted! clear fields and alert user
-                resetForms();
+                resetForms(); // not working as intended
                 alert("Congratulations the park has been successfully added!");
             })
             .catch((err) => {
@@ -153,6 +153,7 @@ const AddPark = (): JSX.Element => {
                             id="outlined-basic" 
                             label="Park Name *" 
                             variant="outlined" 
+                            value={parkName}
                             // color="success" could have focused text field a color other than blue
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setParkName(event.target.value)} }
@@ -162,6 +163,7 @@ const AddPark = (): JSX.Element => {
                             id="outlined-basic" 
                             label="Address *" 
                             variant="outlined" 
+                            value={address}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setAddress(event.target.value)} }
                         />
@@ -176,6 +178,7 @@ const AddPark = (): JSX.Element => {
                             id="outlined-basic" 
                             label="Description" 
                             variant="outlined" 
+                            value={description}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setDescription(event.target.value)} }
                         />
@@ -184,6 +187,7 @@ const AddPark = (): JSX.Element => {
                             id="outlined-basic" 
                             label="Phone Number" 
                             variant="outlined" 
+                            value={phone_nr}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setPhoneNumber(event.target.value)} }
                         />
@@ -195,10 +199,11 @@ const AddPark = (): JSX.Element => {
                         padding:10
                     }}>
                         <TextField 
-                            style={{backgroundColor:'white'}}
+                            // style={{backgroundColor:'white'}}
                             id="outlined-basic" 
                             label="Capacity" 
                             variant="outlined" 
+                            value={capacity}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setCapacity(event.target.value)} }
                         />
@@ -207,6 +212,7 @@ const AddPark = (): JSX.Element => {
                             id="outlined-basic" 
                             label="Link to Park Image" 
                             variant="outlined" 
+                            value={image_url}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setParkImageURL(event.target.value)} }
                         />

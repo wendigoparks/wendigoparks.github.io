@@ -32,17 +32,17 @@ const Login = () => {
     // credentials. 
     const login = () => {
         // Specify username and password in text in body
-        const requestOptions = {
+        // Using Fetch API
+        fetch(loginEndpoint, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Access-Control-Allow-Origin':  'http://127.0.0.1:8000',
                 'Access-Control-Allow-Methods': 'POST',
             },
-            body: `grant_type=&username=${username}&password=${password}&scope=&client_id=&client_secret=`
-        };
-        // Using Fetch API
-        fetch(loginEndpoint, requestOptions)
+            body: `grant_type=&username=${username}&password=${password}&scope=&client_id=&client_secret=`,
+            credentials: 'include'
+        })
         .then((response) => response.json())
         .then((data) => {
             console.log(data);
