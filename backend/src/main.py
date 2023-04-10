@@ -253,9 +253,9 @@ async def create_court(court: schemas.CourtCreate, db: Session = Depends(get_db)
 
 
 
-@app.put("/park/update/{park_name}", response_model=schemas.Park)
-async def update_park(park_name: str, park: schemas.ParkCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    existing_park = crud.update_park(db=db, park_name=park_name, park=park)
+@app.put("/park/update/{park_id}", response_model=schemas.Park)
+async def update_park(park_id: str, park: schemas.ParkCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    existing_park = crud.update_park(db=db, park_id=park_id, park=park)
     if not existing_park:
         raise HTTPException(status_code=404, detail="Park not found")
     return existing_park
@@ -263,7 +263,7 @@ async def update_park(park_name: str, park: schemas.ParkCreate, db: Session = De
 
 
 
-@app.delete("/park/{park_name}", response_model=schemas.Park)
+@app.delete("/park/{park_id}", response_model=schemas.Park)
 async def delete_park(park_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     park = crud.delete_park(db=db, park_id=park_id)
     if not park:

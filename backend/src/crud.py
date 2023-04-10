@@ -136,17 +136,21 @@ def search_parks_by_name(db: Session, park_name: str):
 
 
 
-def update_park(db: Session, park_name: str, park: schemas.ParkCreate):
-    db_park = db.query(models.Park).where(models.Park.name == park_name).first()
+def update_park(db: Session, park_id: str, park: schemas.ParkCreate):
+    db_park = db.query(models.Park).where(models.Park.id == park_id).first()
     if not db_park:
         return None
-    db_park.name = park.name,
-    db_park.description = park.description,
-    db_park.address = park.address,
-    db_park.amenities = park.amenities,
-    db_park.phone_nr = park.phone_nr,
-    db_park.capacity = park.capacity,
-    db_park.image_url = park.image_url,
+    db_park.name = park.name
+    db_park.state = park.state
+    db_park.county = park.county
+    db_park.latitude = park.latitude
+    db_park.longitude = park.longitude
+    db_park.description = park.description
+    db_park.address = park.address
+    db_park.amenities = park.amenities
+    db_park.phone_nr = park.phone_nr
+    db_park.capacity = park.capacity
+    db_park.image_url = park.image_url
     db.commit()
     db.refresh(db_park)
     return db_park
