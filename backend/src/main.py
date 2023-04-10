@@ -164,6 +164,16 @@ async def read_parks(skip: int = 0, limit: int = 100, db: Session = Depends(get_
     return parks
 
 
+@app.get("/parks_and_facilities", response_model=list[schemas.Park])
+async def read_parks_and_facilities(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    parks = crud.get_parks_and_facilities(db=db, skip=skip, limit=limit)
+    return parks
+
+
+@app.get("/parks_facilities_and_courts", response_model=list[schemas.Park])
+async def read_parks_and_facilities(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    parks = crud.get_parks_facilities_and_courts(db=db, skip=skip, limit=limit)
+    return parks
 
 
 @app.get("/park/{park_name}", response_model=schemas.Park)

@@ -29,17 +29,24 @@ CREATE TABLE IF NOT EXISTS facilities (
     park_id VARCHAR(36) NOT NULL,
     FOREIGN KEY (park_id)
         REFERENCES parks(id)
-        ON UPDATE CASCADE ON DELETE CASCADE
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    INDEX(park_id, id)
 );
 
 CREATE TABLE IF NOT EXISTS courts (
     id VARCHAR(36) PRIMARY KEY,
     facility_id VARCHAR(36) NOT NULL,
+    park_id VARCHAR(36) NOT NULL,
     name VARCHAR(128) NOT NULL,
     reservable TINYINT DEFAULT false,
     FOREIGN KEY (facility_id)
         REFERENCES facilities(id)
-        ON UPDATE CASCADE ON DELETE CASCADE
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (park_id)
+        REFERENCES parks(id)
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    INDEX(park_id, facility_id, id),
+    INDEX(facility_id, id)
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -75,8 +82,8 @@ CREATE TABLE IF NOT EXISTS reservations (
 CREATE TABLE IF NOT EXISTS reservations_joined (
     id VARCHAR(36) PRIMARY KEY,
     user_id INTEGER NOT NULL,
-    group_size TINYINT,
-    reservation_joined VARCHAR(36),
+    group_size TINYINT NOT NULL,
+    reservation_joined VARCHAR(36) NOT NULL,
     FOREIGN KEY (user_id)
         REFERENCES users(id)
         ON UPDATE CASCADE ON DELETE CASCADE,
