@@ -123,13 +123,6 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
-
-def find_park(db: Session, park_name: str):
-    return db.query(models.Park).where(models.Park.name == park_name).first()
-
-
-
-
 def find_user(db: Session, username: str=None, email: str=None):
     return db.query(models.User).where(or_(models.User.username == username, models.User.email == email)).first()
 
@@ -161,8 +154,8 @@ def update_park(db: Session, park_name: str, park: schemas.ParkCreate):
 
 
 
-def delete_park(db: Session, park_name: str):
-    db_park = db.query(models.Park).where(models.Park.name == park_name).first()
+def delete_park(db: Session, park_id: str):
+    db_park = db.query(models.Park).where(models.Park.id == park_id).first()
     if not db_park:
         return None
     db.delete(db_park)
@@ -241,3 +234,37 @@ def get_parks_facilities_and_courts(db: Session, skip: int = 0, limit: int = 100
         offset += courts_limit
 
     return parks
+
+
+def get_park(db: Session, id: str):
+    return db.query(models.Park).where(models.Park.id == id).first()
+
+
+def get_facility(db: Session, id: str):
+    return db.query(models.Facility).where(models.Facility.id == id).first()
+
+
+def get_court(db: Session, id: str):
+    return db.query(models.Court).where(models.Court.id == id).first()
+
+
+def get_facilities_for_park(db: Session, id: str):
+    return db.query(models.Facility).where(models.Facility.park_id == id).all()
+
+
+def get_courts_for_facility(db: Session, id: str):
+    return db.query(models.Court).where(models.Court.facility_id == id).all()
+
+
+def get_facilities_and_courts_for_park(db: Session, id: str):
+    facilities = db.query(models.Facility).where(models.Facility.park_id == id).order_by(models.Facility.id).all()
+    courts = db.query(models.Court).where(models.Court.park_id == id).order_by(models.Court.facility_id).all()
+    facility_index = 0
+    for facility in facilities:
+        facility.courts = []
+    for court in courts:
+        while court.facility_id != facilities[facility_index].id:
+            facility_index += 1
+        facilities[facility_index].courts.append(court)
+    return facilities
+    
