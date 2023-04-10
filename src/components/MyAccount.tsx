@@ -11,7 +11,7 @@ import { logOut } from "./Authentication";
 const MyAccount = () => {
 
     // variable to hold user's data
-    const [userData, setUserData] = React.useState({'full_name':'George'});
+    const [userData, setUserData] = React.useState({username:"", email:"", full_name:"",});
 
     // url for endpoint to get user data
     const getUserInfoUrl = "http://127.0.0.1:8000/users/me";
@@ -35,6 +35,7 @@ const MyAccount = () => {
                 console.log("Retrived the following data:\n");
                 console.log(data);
                 // Save user data
+                setUserData(data);
             });
 
       }, [])
@@ -44,15 +45,25 @@ const MyAccount = () => {
 
     return (
         <div>
-            <p> Welcome {userData.full_name} user id: {localStorage.getItem("userID")} </p>
-            <Button variant='contained' onClick={() => {
+            <h3> Welcome {userData.full_name ? userData.full_name : "User"}</h3>
+            <h2> Manage your account: </h2>
+            <Button variant='contained'  onClick={() => {
                 logOut();
                 navigate('/home');
             }}>Log Out</Button>
-            <Button variant='contained' onClick={() => {
+            <span style ={{padding:10}}></span>
+            <Button variant='contained'  onClick={() => {
+                alert("Not implemented yet");
+            }}>Make Account Private</Button>
+            <span style ={{padding:10}}></span>
+            <Button variant='contained'  onClick={() => {
                 alert("Not implemented yet");
             }}>Change Password</Button>
-            <p>Display user data here below:</p>
+            <h2> Account information: </h2>
+            <h3>Your username is {userData.username}</h3>
+            <h3>Your email address is {userData.email}</h3>
+            <p>Show user's calendar of reservations here:</p>
+            <p>Show other users you are following: </p>
         </div>
     )
 }

@@ -32,18 +32,18 @@ const allFacilities: string[] = [
 ]
 
 const facilitesToIcon: { [key: string]: ReactElement<any, any> } = {
-    'Basketball': <SportsBasketballOutlinedIcon key={uuidv4.v4()}/>,
-    'Baseball': <SportsBaseballOutlinedIcon key={uuidv4.v4()} />,
-    'Dog Park': <PetsOutlinedIcon key={uuidv4.v4()} />,
-    'Football': <SportsFootballOutlinedIcon key={uuidv4.v4()} />,
-    'Frisbee Disc Golf': <DiscFullOutlinedIcon key={uuidv4.v4()} />,
-    'Golf': <SportsGolfOutlinedIcon  key={uuidv4.v4()}/>,
-    'Pickleball': < SportsCricketOutlinedIcon key={uuidv4.v4()} />,
-    'Soccer': <SportsSoccerOutlinedIcon key={uuidv4.v4()} />,
-    'Skate Park': <SkateboardingOutlinedIcon key={uuidv4.v4()} />,
-    'Tennis': <SportsTennisOutlinedIcon key={uuidv4.v4()} />,
-    'Volleyball': <SportsVolleyballOutlinedIcon key={uuidv4.v4()} />,
-    'Other': <HelpOutlineOutlinedIcon key={uuidv4.v4()} />
+    'Basketball': <SportsBasketballOutlinedIcon fontSize='inherit' key={uuidv4.v4()}/>,
+    'Baseball': <SportsBaseballOutlinedIcon fontSize='inherit' key={uuidv4.v4()} />,
+    'Dog Park': <PetsOutlinedIcon fontSize='inherit' key={uuidv4.v4()} />,
+    'Football': <SportsFootballOutlinedIcon fontSize='inherit' key={uuidv4.v4()} />,
+    'Frisbee Disc Golf': <DiscFullOutlinedIcon fontSize='inherit' key={uuidv4.v4()} />,
+    'Golf': <SportsGolfOutlinedIcon  fontSize='inherit' key={uuidv4.v4()}/>,
+    'Pickleball': < SportsCricketOutlinedIcon fontSize='inherit' key={uuidv4.v4()} />,
+    'Soccer': <SportsSoccerOutlinedIcon fontSize='inherit' key={uuidv4.v4()} />,
+    'Skate Park': <SkateboardingOutlinedIcon fontSize='inherit' key={uuidv4.v4()} />,
+    'Tennis': <SportsTennisOutlinedIcon fontSize='inherit' key={uuidv4.v4()} />,
+    'Volleyball': <SportsVolleyballOutlinedIcon fontSize='inherit' key={uuidv4.v4()} />,
+    'Other': <HelpOutlineOutlinedIcon fontSize='inherit' key={uuidv4.v4()} />
 }
 
 const textArrayToSymbolArray = (textArray: string[]):any => {

@@ -23,3 +23,4 @@ To run, first enter virtual environment, then use command:
 uvicorn src.main:app --reload
 ```
 This will run the application in a way so that whenever the application code is changed it will automatically restart. To access the API, there are Swagger UI docs at localhost:8000.
+

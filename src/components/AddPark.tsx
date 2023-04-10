@@ -13,6 +13,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import { allFacilities, facilitesToIcon, textArrayToSymbolArray } from "./FacilityIcons";
+import AddFacility from "./AddFacility";
 
 
 const AddPark = (): JSX.Element => {
@@ -205,7 +206,7 @@ const AddPark = (): JSX.Element => {
                             variant="outlined" 
                             value={capacity}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                setCapacity(event.target.value)} }
+                                setCapacity(event.target.value.replace(/[^0-9]/g, ''))} }
                         />
                         <div style={{width: 20}}></div>
                         <TextField 
@@ -217,10 +218,38 @@ const AddPark = (): JSX.Element => {
                                 setParkImageURL(event.target.value)} }
                         />
                     </div>
+                    <div className="LatitudeAndLongitude" style={{
+                        display:'flex',  
+                        justifyContent: 'space-around', 
+                        alignContent: 'space-around',
+                        padding:10
+                    }}>
+                        <TextField 
+                            // style={{backgroundColor:'white'}}
+                            id="outlined-basic" 
+                            label="Latitude" 
+                            variant="outlined" 
+                            value={capacity}
+                            type="number"
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                setCapacity(event.target.value.replace(/[^0-9]/g, ''))} }
+                        />
+                        <div style={{width: 20}}></div>
+                        <TextField 
+                            id="outlined-basic" 
+                            label="Longitude" 
+                            variant="outlined" 
+                            value={image_url}
+                            type="number"
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                setParkImageURL(event.target.value)} }
+                        />
+                    </div>
                     <div className="Facilities">
-                    <FormControl sx={{ m: 1, width: 465 }}>
+                    <FormControl sx={{ m: 1, width: 465 }}  >
                         <InputLabel id="multiple-checkbox-label">Facilities</InputLabel>
-                        <Select
+                        <Select 
+                        style={{fontSize:25}}
                         labelId="multiple-checkbox-label"
                         id="multiple-checkbox"
                         multiple
@@ -258,6 +287,22 @@ const AddPark = (): JSX.Element => {
                 </div>
             </div>
             </div>
+                {
+                    amenitiesValue[0] ? 
+                    
+                    <div className="Add Facilities" style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+                        <h1>Your Park has the following Facilities:</h1>
+                        <p>{amenitiesValue.join(', ')}</p>
+                        {
+                            amenitiesValue.map(amenityString => (
+                                <AddFacility facility={amenityString} />
+                            ))
+                        }
+                    </div>
+                    :
+                    <div></div>
+                }
+
         </div>
     )
 }
