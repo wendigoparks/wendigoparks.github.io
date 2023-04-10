@@ -212,6 +212,16 @@ async def create_park(park: schemas.ParkCreate, db: Session = Depends(get_db), t
     return crud.create_park(db=db, park=park)
 
 
+@app.post("/facility/", response_model=schemas.Facility)
+async def create_facility(facility: schemas.FacilityCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    return crud.create_facility(db=db, facility=facility)
+
+
+@app.post("/court/", response_model=schemas.Court)
+async def create_court(court: schemas.CourtCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    return crud.create_court(db=db, court=court)
+
+
 
 
 @app.put("/park/update/{park_name}", response_model=schemas.Park)

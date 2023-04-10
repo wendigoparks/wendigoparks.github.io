@@ -59,7 +59,54 @@ def create_park(db: Session, park: schemas.ParkCreate):
     db.commit()
     db.refresh(db_park)
     return db_park
-        
+
+
+def create_facility(db: Session, facility: schemas.FacilityCreate):
+    db_facility = models.Facility(
+        id = str(uuid4()),
+        name = facility.name,
+        state = facility.state,
+        county = facility.county,
+        address = facility.address,
+        latitude = facility.latitude,
+        longitude = facility.longitude,
+        description = facility.description,
+        phone_nr = facility.phone_nr,
+        type = facility.type,
+        capacity = facility.capacity,
+        image_url = facility.image_url,
+        park_id = facility.park_id,
+    )
+    db.add(db_facility)
+    db.commit()
+    if facility.courts:
+        for court in facility.courts:
+            db_court = models.Court(
+                id = str(uuid4()),
+                facility_id = db_facility.id,
+                park_id = facility.park_id,
+                name = court.name,
+                reservable = court.reservable,
+            )
+            db.add(db_court)
+    db.commit()
+    db.refresh(db_facility)
+    return db_facility
+
+
+def create_court(db: Session, court: schemas.CourtCreate):
+    db_court = models.Court(
+        id = str(uuid4()),
+        facility_id = court.facility_id,
+        park_id = court.park_id,
+        name = court.name,
+        reservable = court.reservable,
+    )
+    db.add(db_court)
+    db.commit()
+    db.refresh(db_court)
+    return db_court
+
 
 def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(
