@@ -69,11 +69,13 @@ const AddPark = (): JSX.Element => {
                 "name": parkName,
                 "description": description.trim() ? description.trim() : defaultDescription,
                 "address": address,
-                "amenities": amenitiesValue ? amenitiesValue.join() : defaultAmenities,
+                "amenities": amenitiesValue ? amenitiesValue.join(',') : defaultAmenities,
                 "phone_nr": phone_nr.trim() ? phone_nr.trim() : defaultPhoneNumber,
                 "capacity": capacity.trim() ? capacity.trim() : defaultCapacity,
                 "image_url": image_url.trim() ? image_url.trim() : defaultImageUrl
             }
+
+            console.log("amenities looks like: \n" + amenitiesValue.join(','))
 
             const requestOptions = {
                 method: 'POST',
@@ -81,6 +83,7 @@ const AddPark = (): JSX.Element => {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin':  'http://127.0.0.1:8000',
                     'Access-Control-Allow-Methods': 'POST',
+                    'Authorization': `Bearer ${localStorage.getItem("userToken")}`
                 },
                 body: JSON.stringify(parkJson)
             };
@@ -241,7 +244,7 @@ const AddPark = (): JSX.Element => {
                     "name": parkName,
                     "description": description.trim() ? description.trim() : defaultDescription,
                     "address": address,
-                    "amenities": amenitiesValue ? amenitiesValue.join() : defaultAmenities,
+                    "amenities": amenitiesValue ? amenitiesValue.join(',') : defaultAmenities,
                     "phone_nr": phone_nr.trim() ? phone_nr.trim() : defaultPhoneNumber,
                     "capacity": capacity.trim() ? capacity.trim() : defaultCapacity,
                     "image_url": image_url.trim() ? image_url.trim() : defaultImageUrl

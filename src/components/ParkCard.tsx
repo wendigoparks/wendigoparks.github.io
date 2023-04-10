@@ -62,7 +62,7 @@ const ParkCard = (props: any): JSX.Element => {
                         <div className="Amenities" style={{display:'flex'}}>
                             <Typography variant="body2"  style={{paddingRight:10}}>
                                 {/* Make amenitites a list and then use this: Amenities: {textArrayToSymbolArray(props.park.amenities)} */}
-                                Amenities: {props.park.amenities}
+                                Amenities: {textArrayToSymbolArray(["basketball"])}
                             </Typography>
                         </div>
                     </CardContent>

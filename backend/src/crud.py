@@ -27,7 +27,7 @@ def create_park(db: Session, park: schemas.ParkCreate):
 
 def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(
-        id = randint(),
+        id = randint(1, 99999),
         username = user.username,
         email = user.email,
         full_name = user.full_name,
