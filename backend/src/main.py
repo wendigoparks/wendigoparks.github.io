@@ -225,16 +225,55 @@ async def read_parks(skip: int = 0, limit: int = 100, db: Session = Depends(get_
     return parks
 
 
+@app.get("/parks_and_facilities", response_model=list[schemas.Park])
+async def read_parks_and_facilities(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    parks = crud.get_parks_and_facilities(db=db, skip=skip, limit=limit)
+    return parks
 
 
-@app.get("/park/{park_name}", response_model=schemas.Park)
-async def find_park(park_name: str, db: Session = Depends(get_db)):
-    park = crud.find_park(db=db, park_name=park_name)
+@app.get("/parks_facilities_and_courts", response_model=list[schemas.Park])
+async def read_parks_and_facilities(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    parks = crud.get_parks_facilities_and_courts(db=db, skip=skip, limit=limit)
+    return parks
+
+
+@app.get("/park/{park_id}", response_model=schemas.Park)
+async def get_park(park_id: str, db: Session = Depends(get_db)):
+    park = crud.get_park(db=db, id=park_id)
     if not park:
         raise HTTPException(status_code=404, detail="Park not found")
     return park
 
 
+@app.get("/facility/{facility_id}", response_model=schemas.Facility)
+async def get_facility(facility_id: str, db: Session = Depends(get_db)):
+    facility = crud.get_facility(db=db, id=facility_id)
+    if not facility:
+        raise HTTPException(status_code=404, detail="Facility not found")
+    return facility
+
+
+@app.get("/court/{court_id}", response_model=schemas.Court)
+async def get_court(court_id: str, db: Session = Depends(get_db)):
+    court = crud.get_court(db=db, id=court_id)
+    if not court:
+        raise HTTPException(status_code=404, detail="Court not found")
+    return court
+
+
+@app.get("/facilities/{park_id}", response_model=list[schemas.Facility])
+async def get_facilities_by_park(park_id: str, db: Session = Depends(get_db)):
+    return crud.get_facilities_for_park(db=db, id=park_id)
+
+
+@app.get("/courts/{facility_id}", response_model=list[schemas.Court])
+async def get_courts_by_facility(facility_id: str, db: Session = Depends(get_db)):
+    return crud.get_courts_for_facility(db=db, id=facility_id)
+
+
+@app.get("/facilities_and_courts/{park_id}", response_model=list[schemas.Facility])
+async def get_facilities_and_courts_by_park(park_id: str, db: Session = Depends(get_db)):
+    return crud.get_facilities_and_courts_for_park(db=db, id=park_id)
 
 
 @app.get("/parks/{park_name_contains}", response_model=list[schemas.Park])
@@ -263,10 +302,31 @@ async def create_park(park: schemas.ParkCreate, db: Session = Depends(get_db), t
     return crud.create_park(db=db, park=park)
 
 
+@app.post("/facility/", response_model=schemas.Facility)
+async def create_facility(facility: schemas.FacilityCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    return crud.create_facility(db=db, facility=facility)
 
-@app.delete("/park/{park_name}", response_model=schemas.Park)
-async def delete_park(park_name: str, db: Session = Depends(get_db), park: schemas.Park = Security(get_park_request, scopes=['delete'])):
-    park = crud.delete_park(db=db, park_name=park.name)
+
+@app.post("/court/", response_model=schemas.Court)
+async def create_court(court: schemas.CourtCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    return crud.create_court(db=db, court=court)
+
+
+
+
+@app.put("/park/update/{park_id}", response_model=schemas.Park)
+async def update_park(park_id: str, park: schemas.ParkCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    existing_park = crud.update_park(db=db, park_id=park_id, park=park)
+    if not existing_park:
+        raise HTTPException(status_code=404, detail="Park not found")
+    return existing_park
+
+
+
+
+@app.delete("/park/{park_id}", response_model=schemas.Park)
+async def delete_park(park_id: str, db: Session = Depends(get_db), park: schemas.Park = Security(get_park_request, scopes=['delete'])):
+    park = crud.delete_park(db=db, park_name=park_name)
     if not park:
         raise HTTPException(status_code=404, detail="Park not found")
     return park

@@ -61,7 +61,7 @@ function Parks() {
     return (
         <div>
             {/* This page could just retrieve ALL parks and pass them to search results */}
-            <SearchResults parks={parks}/>
+            <SearchResults parks={parks} allParks={true}/>
         </div>
 );
 }

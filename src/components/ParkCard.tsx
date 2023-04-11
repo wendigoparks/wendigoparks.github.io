@@ -57,7 +57,7 @@ const ParkCard = (props: any): JSX.Element => {
                         <Typography variant="body2" style={{paddingLeft:'5px'}}>
                             ✆ {props.park.phone_nr}
                         </Typography>
-                        <Typography variant="body2"  style={{paddingRight:10}}>
+                        <Typography variant="body2"  style={{paddingRight:10, fontSize:25}}>
                                 {/* Make amenitites a list and then use this: Amenities: {textArrayToSymbolArray(props.park.amenities)} */}
                             {textArrayToSymbolArray(props.park.amenities ? props.park.amenities.split(',') : ["basketball"])}
                         </Typography>
