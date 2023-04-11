@@ -51,8 +51,8 @@ const ParkCard = (props: any): JSX.Element => {
                         <Typography gutterBottom variant="h5" component="div">
                             {name}
                         </Typography>
-                        <Typography variant="body2">
-                            Address: {props.park.address}
+                        <Typography variant="body2" sx={{textDecoration: 'underline'}} display="inline" >
+                            {props.park.address}
                         </Typography>
                         <Typography variant="body2" style={{paddingLeft:'5px'}}>
                             ✆ {props.park.phone_nr}

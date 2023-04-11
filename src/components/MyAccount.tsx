@@ -12,6 +12,10 @@ const MyAccount = () => {
 
     // variable to hold user's data
     const [userData, setUserData] = React.useState({username:"", email:"", full_name:"",});
+    
+    // Allows to switch pages to login screen on log out
+    // Also allows to switch pages to login page if user is not already logged in and tries to access My Account page
+    const navigate = useNavigate();
 
     // url for endpoint to get user data
     const getUserInfoUrl = "http://127.0.0.1:8000/users/me";
@@ -30,18 +34,26 @@ const MyAccount = () => {
                 'authjwt_cookie_samesite': 'none'},
             credentials: 'include'
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Retrived the following data:\n");
-                console.log(data);
-                // Save user data
+        .then(response => response.json())
+        .then(data => {
+            console.log("Retrived the following data:\n");
+            console.log(data);
+            // Save user data if successfull - redirect to login page if not 
+            if (data.username) {
                 setUserData(data);
-            });
+            } else {
+                navigate('/login');
+            }
+        })
+        .catch((err) => {
+            console.log(err.message);
+            console.log("Unable to obtain My Account info, error contacting database.")
+            navigate('/login');
+        });
 
       }, [])
 
-    // Allows to switch pages to login screen on log out
-   const navigate = useNavigate();
+    
 
     return (
         <div>

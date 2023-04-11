@@ -155,6 +155,7 @@ const AddPark = (): JSX.Element => {
                             label="Park Name *" 
                             variant="outlined" 
                             value={parkName}
+                            inputProps={{ maxLength: 30 }}
                             // color="success" could have focused text field a color other than blue
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setParkName(event.target.value)} }
@@ -165,6 +166,7 @@ const AddPark = (): JSX.Element => {
                             label="Address *" 
                             variant="outlined" 
                             value={address}
+                            inputProps={{ maxLength: 40 }}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setAddress(event.target.value)} }
                         />
@@ -189,6 +191,7 @@ const AddPark = (): JSX.Element => {
                             label="Phone Number" 
                             variant="outlined" 
                             value={phone_nr}
+                            inputProps={{ maxLength: 25 }}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setPhoneNumber(event.target.value)} }
                         />
@@ -206,7 +209,7 @@ const AddPark = (): JSX.Element => {
                             variant="outlined" 
                             value={capacity}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                setCapacity(event.target.value.replace(/[^0-9]/g, ''))} }
+                                setCapacity(event.target.value.replace(/[^(\d?\d?)]|\d{3}/g, ''))} }
                         />
                         <div style={{width: 20}}></div>
                         <TextField 
@@ -291,8 +294,8 @@ const AddPark = (): JSX.Element => {
                     amenitiesValue[0] ? 
                     
                     <div className="Add Facilities" style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
-                        <h1>Your Park has the following Facilities:</h1>
-                        <p>{amenitiesValue.join(', ')}</p>
+                        <h1>Please provide more information about your park's facilities:</h1>
+                        {/* <p>{amenitiesValue.join(', ')}</p> */}
                         {
                             amenitiesValue.map(amenityString => (
                                 <AddFacility facility={amenityString} />
