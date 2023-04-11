@@ -33,6 +33,7 @@ def create_user(db: Session, user: schemas.UserCreate):
         full_name = user.full_name,
         disabled = user._disabled,
         hashed_pswd = user.hashed_pswd,
+        admin = False
     )
     db.add(db_user)
     db.commit()

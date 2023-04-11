@@ -3,13 +3,13 @@ from dotenv import load_dotenv
 load_dotenv('.env.local')
 load_dotenv()
 
-from fastapi import Depends, FastAPI, HTTPException, status, Response
+from fastapi import Depends, FastAPI, HTTPException, status, Response, Security, Path
 from fastapi.responses import RedirectResponse
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm, SecurityScopes
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from passlib.hash import bcrypt
-from pydantic import BaseModel #temporary
+from pydantic import BaseModel, ValidationError
 
 from . import crud, models, schemas, utils
 from .database import SessionLocal, engine
@@ -51,7 +51,7 @@ def get_db():
         db.close()
         
 # Dependency
-oauth2_scheme = utils.OAuth2PasswordBearerWithCookie(tokenUrl="token")
+oauth2_scheme = utils.OAuth2PasswordBearerWithCookie(tokenUrl="token",scopes={'Admin' : "Info", 'me' : "Info"},)
 
 
 class Token(BaseModel):
@@ -62,7 +62,7 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
-
+    scopes: list[str] = []
 
 
 def verify_password(plain_password, hashed_password):
@@ -97,9 +97,19 @@ def create_jwt_token(data: dict, expires_delta: timedelta | None = None):
     return ejwt
 
 
+@app.put("/park/update/{park_name}", response_model=schemas.Park)
+async def update_park(park_name: str, park: schemas.ParkCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    existing_park = crud.update_park(db=db, park_name=park_name, park=park)
+    if not existing_park:
+        raise HTTPException(status_code=404, detail="Park not found")
+    return existing_park
 
 
-async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+async def get_park_request(security_scopes: SecurityScopes, park_name: str = Path(...), db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    if security_scopes.scopes:
+        authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
+    else:
+        authenticate_value = "Bearer"
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -110,22 +120,67 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
-    except JWTError:
+        token_scopes = payload.get("scopes", [])
+        token_data = TokenData(scopes=token_scopes, username=username)
+    except (JWTError, ValidationError):
         raise credentials_exception
-    user = crud.find_user(db=db, username=token_data.username)
+    park = crud.find_park(db=db, park_name=park_name)
+    if park is None:
+        raise credentials_exception
+    for scope in security_scopes.scopes:
+        if "admin" in token_data.scopes:
+            break
+        if (scope + ':' + str(park.id)) not in token_data.scopes:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not enough permissions to delete given park",
+                headers={"WWW-Authenticate": authenticate_value},
+            )
+    return park
+
+
+async def get_user_request(security_scopes: SecurityScopes, user_id: str = Path(...), db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    if security_scopes.scopes:
+        authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
+    else:
+        authenticate_value = "Bearer"
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        token_scopes = payload.get("scopes", [])
+        token_data = TokenData(scopes=token_scopes, username=username)
+    except (JWTError, ValidationError):
+        raise credentials_exception
+    if(user_id == 'me'):
+        user = crud.find_user(db=db, username=token_data.username)
+    else:
+        user = crud.find_user(db=db, username=user_id)
     if user is None:
         raise credentials_exception
+    for scope in security_scopes.scopes:
+        if "admin" in token_data.scopes:
+            break
+        if (scope + ':' + str(user.id)) not in token_data.scopes:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not enough permissions to access given user",
+                headers={"WWW-Authenticate": authenticate_value},
+            )
     return user
 
 
 
-
-async def get_current_active_user(current_user: schemas.User = Depends(get_current_user)):
+async def get_active_user(current_user: schemas.User = Security(get_user_request, scopes=['read'])):
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
-
 
 
 
@@ -134,22 +189,28 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
+    
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    scopes = []
+
+    #define scopes
+    if(user.admin):
+        scopes.append("Admin")
+    scopes.append("read:"+str(user.id))
+    scopes.append("write:"+str(user.id))
+
+
     access_token = create_jwt_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.username, "scopes": scopes}, expires_delta=access_token_expires
     )
-    response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True, secure=True, samesite='none')  #set HttpOnly cookie in response
+    response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True)  #set HttpOnly cookie in response
     return {"access_token": access_token, "token_type": "bearer"}
 
 
 
-
-@app.get("/users/me", response_model=schemas.User)
-async def read_users_me(current_user: schemas.User = Depends(get_current_active_user)):
+@app.get("/users/{user_id}", response_model=schemas.User)
+async def read_user(user_id: str, current_user: schemas.User = Depends(get_active_user)):
     return current_user
-
-
-
 
 @app.post("/encrypt")
 async def encrypt(pas: str):
@@ -203,20 +264,10 @@ async def create_park(park: schemas.ParkCreate, db: Session = Depends(get_db), t
 
 
 
-
-@app.put("/park/update/{park_name}", response_model=schemas.Park)
-async def update_park(park_name: str, park: schemas.ParkCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    existing_park = crud.update_park(db=db, park_name=park_name, park=park)
-    if not existing_park:
-        raise HTTPException(status_code=404, detail="Park not found")
-    return existing_park
-
-
-
-
 @app.delete("/park/{park_name}", response_model=schemas.Park)
-async def delete_park(park_name: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    park = crud.delete_park(db=db, park_name=park_name)
+async def delete_park(park_name: str, db: Session = Depends(get_db), park: schemas.Park = Security(get_park_request, scopes=['delete'])):
+    park = crud.delete_park(db=db, park_name=park.name)
     if not park:
         raise HTTPException(status_code=404, detail="Park not found")
     return park
+

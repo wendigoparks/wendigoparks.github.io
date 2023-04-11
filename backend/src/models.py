@@ -23,3 +23,4 @@ class User(Base):
     full_name = Column(String)
     disabled = Column(Integer)
     hashed_pswd = Column(String)
+    admin = Column(Integer)
