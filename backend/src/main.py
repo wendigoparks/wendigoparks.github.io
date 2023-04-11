@@ -105,7 +105,7 @@ async def update_park(park_name: str, park: schemas.ParkCreate, db: Session = De
     return existing_park
 
 
-async def get_park_request(security_scopes: SecurityScopes, park_name: str = Path(...), db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+async def get_park_request(security_scopes: SecurityScopes, park_id: str = Path(...), db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     if security_scopes.scopes:
         authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
     else:
@@ -293,7 +293,7 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 
-
+#the create methods need further disscussion for security purposes
 @app.post("/park/", response_model=schemas.Park)
 async def create_park(park: schemas.ParkCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     existing_park = crud.find_park(db=db, park_name=park.name)
@@ -315,8 +315,8 @@ async def create_court(court: schemas.CourtCreate, db: Session = Depends(get_db)
 
 
 @app.put("/park/update/{park_id}", response_model=schemas.Park)
-async def update_park(park_id: str, park: schemas.ParkCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    existing_park = crud.update_park(db=db, park_id=park_id, park=park)
+async def update_park(park_id: str, park_update: schemas.ParkCreate, db: Session = Depends(get_db), park: schemas.Park = Security(get_park_request, scopes=['update'])):
+    existing_park = crud.update_park(db=db, park_id=park_id, park=park_update)
     if not existing_park:
         raise HTTPException(status_code=404, detail="Park not found")
     return existing_park
@@ -326,8 +326,8 @@ async def update_park(park_id: str, park: schemas.ParkCreate, db: Session = Depe
 
 @app.delete("/park/{park_id}", response_model=schemas.Park)
 async def delete_park(park_id: str, db: Session = Depends(get_db), park: schemas.Park = Security(get_park_request, scopes=['delete'])):
-    park = crud.delete_park(db=db, park_name=park_name)
     if not park:
         raise HTTPException(status_code=404, detail="Park not found")
+    park = crud.delete_park(db=db, park_name=park.name)
     return park
 
