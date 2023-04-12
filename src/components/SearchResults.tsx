@@ -79,7 +79,10 @@ const SearchResults = (props: any): JSX.Element => {
             {/* <SearchAppBar /> If we wanted to change the top bar by the page the new variation would go here */}
             {   /* Show all parks that match the search results */ }
             <div>
-                <h1>Parks matching your search:</h1>
+                {
+                    props.allParks ? <div /> :
+                    <h1>Parks matching your search:</h1>
+                }
                 {
                     parks != null ?
                     <div className="ParkCardFlexBox" style={{

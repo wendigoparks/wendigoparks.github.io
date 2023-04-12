@@ -72,4 +72,3 @@ class ReservationJoin(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     group_size = Column(Integer)
     reservation_joined = Column(String, ForeignKey("reservations.id"))
-

@@ -42,12 +42,14 @@ const MyAccount = () => {
             if (data.username) {
                 setUserData(data);
             } else {
+                logOut();
                 navigate('/login');
             }
         })
         .catch((err) => {
             console.log(err.message);
             console.log("Unable to obtain My Account info, error contacting database.")
+            logOut();
             navigate('/login');
         });
 

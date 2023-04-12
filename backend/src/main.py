@@ -203,7 +203,7 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
     access_token = create_jwt_token(
         data={"sub": user.username, "scopes": scopes}, expires_delta=access_token_expires
     )
-    response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True)  #set HttpOnly cookie in response
+    response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True, secure=True, samesite='none')  #set HttpOnly cookie in response
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -296,9 +296,9 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 #the create methods need further disscussion for security purposes
 @app.post("/park/", response_model=schemas.Park)
 async def create_park(park: schemas.ParkCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    existing_park = crud.find_park(db=db, park_name=park.name)
-    if existing_park:
-        raise HTTPException(status_code=400, detail="Park with this name already exists")
+    #existing_park = crud.find_park(db=db, park_name=park.name)
+    #if existing_park:
+    #    raise HTTPException(status_code=400, detail="Park with this name already exists")
     return crud.create_park(db=db, park=park)
 
 

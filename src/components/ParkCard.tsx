@@ -38,8 +38,8 @@ const ParkCard = (props: any): JSX.Element => {
             {/*Paper gives the elevated look*/}
           <Paper elevation={8}  style={{height: '300px'}}>
             <Card style={{height: '300px'}}>
-                <CardActionArea onClick={() => {
-                    navigate(`/park/${props.park.id}`);
+                <CardActionArea style={{height: '300px'}} onClick={() => { 
+                    if (!props.notClickable) { navigate(`/park/${props.park.id}`); }
                     }}>
                     <CardMedia
                         component="img"

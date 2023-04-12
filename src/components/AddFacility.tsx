@@ -10,9 +10,56 @@ const AddFacility = (props: any ): JSX.Element => {
 
     // State variables for facility values
     const [name, setName] = React.useState(props.facility);
+    const [address, setAddress] = React.useState(props.address);
+    const [description, setDescription] = React.useState("");
     const [capacity, setCapacity] = React.useState("");
     const [numberOfCourts, setNumberOfCourts] = React.useState("");
     const [courtsArray, setCourtsArray] = React.useState<any[]>([]);
+
+    // use these setters, so that values are propogated up to parent
+    const setFacilityName = (newName: string) => {
+        setName(newName);
+        props.updateFacilityInformation({
+            name:newName, 
+            address:address, 
+            description:description, 
+            capacity:capacity,
+            courts:courtsArray,
+        }, props.index);
+    }
+
+    const setFacilityAddress = (newAddress: string) => {
+        setAddress(newAddress);
+        props.updateFacilityInformation({
+            name:name, 
+            address:newAddress, 
+            description:description, 
+            capacity:capacity,
+            courts:courtsArray,
+        }, props.index);
+    }
+
+    const setFacilityDescription = (newDescription: string) => {
+        setDescription(newDescription);
+        props.updateFacilityInformation({
+            name:name, 
+            address:address, 
+            description:newDescription, 
+            capacity:capacity,
+            courts:courtsArray,
+        }, props.index);
+    }
+
+    const setFacilityCapacity = (newCapacity: string) => {
+        setCapacity(newCapacity);
+        props.updateFacilityInformation({
+            name:name, 
+            address:address, 
+            description:description, 
+            capacity:newCapacity,
+            courts:courtsArray,
+        }, props.index);
+    }
 
     // court indicies to modify the array correctly
 
@@ -54,7 +101,16 @@ const AddFacility = (props: any ): JSX.Element => {
         let newCourtsArray = courtsArray;
         newCourtsArray[index] = newValues;
         setCourtsArray(newCourtsArray);
+        props.updateFacilityInformation({
+            name:name, 
+            address:address, 
+            description:description, 
+            capacity:capacity,
+            courts:newCourtsArray,
+        }, props.index);
     }
+
+    // Actual parameters of facility that will be editable are: name, address, capacity, description ?
 
     return (
         <div style={{width:"95%"}}>
@@ -90,6 +146,7 @@ const AddFacility = (props: any ): JSX.Element => {
                 <div className="HorizontalFacilityBar" style={{
                     backgroundColor: "lightcyan",
                     display:'flex',
+                    flexWrap: 'wrap',
                     justifyContent:'space-evenly',
                     alignItems:'center',
                     paddingTop:'18px',
@@ -107,7 +164,7 @@ const AddFacility = (props: any ): JSX.Element => {
                             value={name}
                             // color="success" could have focused text field a color other than blue
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                setName(event.target.value)} }
+                                setFacilityName(event.target.value)} }
                         />
                     </div>
                     <div className="facilityAddress" style={{ }}>
@@ -115,43 +172,45 @@ const AddFacility = (props: any ): JSX.Element => {
                             id="outlined-basic" 
                             label="Facility Address" 
                             variant="outlined" 
-                            value={name}
+                            value={address}
                             // color="success" could have focused text field a color other than blue
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                setName(event.target.value)} }
+                                setFacilityAddress(event.target.value)} }
                         />
                     </div>
-                    <div className="facilityPhone" style={{ }}>
+                    <div className="facilityDescription" style={{ }}>
                     <TextField 
                             id="outlined-basic" 
-                            label="Facility Phone Number" 
+                            label="Facility Description" 
                             variant="outlined" 
-                            value={name}
+                            value={description}
                             // color="success" could have focused text field a color other than blue
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                setName(event.target.value)} }
+                                setFacilityDescription(event.target.value)} }
                         />
                     </div>
                     <div className="facilityCapacity" style={{ }}>
                         <TextField 
                             id="outlined-basic" 
                             label="Facility Capacity" 
-                            variant="standard" 
+                            variant="outlined" 
                             value={capacity}
                             // color="success" could have focused text field a color other than blue
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                setCapacity(event.target.value)} }
+                                setFacilityCapacity(event.target.value)} }
                         />
                     </div>
                     <div className="FacilityCourts" style={{ }}>
                         <TextField 
                             id="outlined-basic" 
                             label={("Number of " + getPhraseForCourts())}
-                            variant="filled" 
+                            variant="outlined" 
                             value={numberOfCourts}
                             // color="success" could have focused text field a color other than blue
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                createCourtsArray(event.target.value.replace(/[^(\d?\d?)]|\d{3}/g, ''));
+                                createCourtsArray(( parseInt(event.target.value.replace(/[^(\d?\d?)]|\d{3}/g, '')) <= 20 ? 
+                                event.target.value.replace(/[^(\d?\d?)]|\d{3}/g, '')
+                                : "20" ));
                             } }
                         />
                     </div>

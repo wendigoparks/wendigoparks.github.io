@@ -38,7 +38,7 @@ const userIsLoggedIn = (): boolean => {
     .catch((err) => {
         return false;
     });
-    return false;
+    return !!localStorage.getItem("userToken");
 }
 
 // Saves token and user id retreived from database into local storage so browser knows user is logged in
