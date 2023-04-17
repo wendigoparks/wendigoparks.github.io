@@ -14,6 +14,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import { allFacilities,  textArrayToSymbolArray } from "./FacilityIcons";
 import AddFacility from "./AddFacility";
+import { userIsLoggedIn } from "./Authentication";
 
 
 const AddPark = (): JSX.Element => {
@@ -138,7 +139,7 @@ const AddPark = (): JSX.Element => {
         // update fields individually to keep fields not adjusted:
         // currently actual parameters of facility that will be editable are: name, address, capacity, description
         facilityToUpdate.name = facilityInformation.name ? facilityInformation.name : amenitiesValue[index];
-        facilityToUpdate.address = facilityInformation.address ? facilityInformation.name : address;
+        facilityToUpdate.address = facilityInformation.address ? facilityInformation.address : address;
         facilityToUpdate.description = facilityInformation.description;
         facilityToUpdate.capacity = facilityInformation.capacity;
         facilityToUpdate.courts = facilityInformation.courts;
@@ -179,6 +180,13 @@ const AddPark = (): JSX.Element => {
                 capacity:"",
                 image_url:image_url,
                 courts:[],
+                monday_hours:"",
+                tuesday_hours:"",
+                wednesday_hours:"",
+                thursday_hours:"",
+                friday_hours:"",
+                saturday_hours:"",
+                sunday_hours:"",
             });
         }
         setFacilitiesArray(newFacilitiesArray);
@@ -187,13 +195,21 @@ const AddPark = (): JSX.Element => {
 
     return (
         <div>
-            <h1>Add a new park</h1>
+            <h1>Add a New Park</h1>
 
-            <Button 
-                onClick={() => validateAndSend()} variant="contained" disabled={!(parkName.trim()) || !(address.trim())}
-            > 
-                Add Park
-            </Button>
+            {
+                /* Only logged in users (later with higher priveledges can add a park) */
+                userIsLoggedIn() ? 
+                <Button 
+                    onClick={() => validateAndSend()} variant="contained" disabled={!(parkName.trim()) || !(address.trim())}
+                > 
+                    Add Park
+                </Button>
+                :
+                <h1 style={{color:'red'}}>
+                    You Must Be Logged In To Create A Park
+                </h1>
+            }
             <div className="FormsAndPreview" style={{
                 display:'flex',
                 justifyContent:'space-around',
@@ -335,6 +351,7 @@ const AddPark = (): JSX.Element => {
                                 setLongitude(event.target.value)} }
                         />
                     </div>
+                    {/*
                     <div className="Description" style={{
                         display:'flex',  
                         justifyContent: 'space-around', 
@@ -351,6 +368,8 @@ const AddPark = (): JSX.Element => {
                                 setDescription(event.target.value)} }
                         />
                     </div>
+                    */}
+                    
                     <div className="Facilities">
                     <FormControl sx={{ m: 1, width: 465 }}  >
                         <InputLabel id="multiple-checkbox-label">Facilities</InputLabel>

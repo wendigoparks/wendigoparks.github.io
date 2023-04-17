@@ -34,20 +34,20 @@ const ParkCard = (props: any): JSX.Element => {
    const navigate = useNavigate();
 
     return (
-        <div style={{padding: '25px', width: '345px', maxHeight: '300px', minHeight: '300px'}}>
+        <div style={{padding: '25px', width: '345px'}}>
             {/*Paper gives the elevated look*/}
-          <Paper elevation={8}  style={{height: '300px'}}>
-            <Card style={{height: '300px'}}>
-                <CardActionArea style={{height: '300px'}} onClick={() => { 
+          <Paper elevation={8}  >
+            <Card >
+                <CardActionArea  onClick={() => { 
                     if (!props.notClickable) { navigate(`/park/${props.park.id}`); }
                     }}>
                     <CardMedia
                         component="img"
-                        height="140"
+                        height="150px"
                         image={props.park.image_url}
                         alt="photo of a park"
                     />
-                    <CardContent>
+                    <CardContent style={{minHeight:'150px', maxHeight:'150px'}}>
                         <Typography gutterBottom variant="h5" component="div">
                             {name}
                         </Typography>

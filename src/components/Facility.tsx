@@ -53,6 +53,7 @@ const Facility = (props: any): JSX.Element => {
     }
 
     function toTitleCase(s: string) {
+        if (!s) return "";
         s = s.toLowerCase()
             .split(' ')
             .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
