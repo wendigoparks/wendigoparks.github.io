@@ -48,6 +48,13 @@ class FacilityBase(BaseModel):
     capacity: int | None = None
     image_url: str | None = None
     park_id: str | None = None
+    monday_hours: str | None = None
+    tuesday_hours: str | None = None
+    wednesday_hours: str | None = None
+    thursday_hours: str | None = None
+    friday_hours: str | None = None
+    saturday_hours: str | None = None
+    sunday_hours: str | None = None
 
 class FacilityCreate(FacilityBase):
     courts: list[CourtCreate] | None = None
@@ -90,6 +97,9 @@ class ParkCreate(ParkBase):
                         'description': 'Tennis courts',
                         'type': 'tennis',
                         'capacity': 8,
+                        'monday_hours': '9:00-15:00',
+                        'tuesday_hours': '9:00-15:00',
+                        'wednesday_hours': '9:00-15:00',
                         'courts': [
                             {
                                 'name': 'Tennis Court 1',
@@ -122,16 +132,16 @@ class ReservationBase(BaseModel):
     date: str
     start_time: str
     end_time: str
-    user_id: int
     court_id: str
-    group_size: int
-    number_can_join: int
-    number_can_join_total: int
+    group_size: int | None = None
+    number_can_join_total: int = 0
 
 class ReservationCreate(ReservationBase):
     pass
 
 class Reservation(ReservationBase):
+    number_can_join: int = 0
+    user_id: int
     id: str
     class Config:
         orm_mode = True

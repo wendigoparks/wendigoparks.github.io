@@ -204,7 +204,7 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
     access_token = create_jwt_token(
         data={"sub": user.username, "scopes": scopes}, expires_delta=access_token_expires
     )
-    response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True, secure=True)  #set HttpOnly cookie in response
+    response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True, secure=True, samesite='none')  #set HttpOnly cookie in response
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -264,11 +264,15 @@ async def get_court(court_id: str, db: Session = Depends(get_db)):
 
 @app.get("/facilities/{park_id}", response_model=list[schemas.Facility])
 async def get_facilities_by_park(park_id: str, db: Session = Depends(get_db)):
+    if not crud.get_park(db=db, id=park_id):
+        raise HTTPException(status_code=404, detail="Park not found")
     return crud.get_facilities_for_park(db=db, id=park_id)
 
 
 @app.get("/courts/{facility_id}", response_model=list[schemas.Court])
 async def get_courts_by_facility(facility_id: str, db: Session = Depends(get_db)):
+    if not crud.get_facility(db=db, id=facility_id):
+        raise HTTPException(status_code=404, detail="Facility not found")
     return crud.get_courts_for_facility(db=db, id=facility_id)
 
 
@@ -297,9 +301,9 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 #the create methods need further disscussion for security purposes
 @app.post("/park/", response_model=schemas.Park)
 async def create_park(park: schemas.ParkCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    existing_park = crud.find_park(db=db, park_name=park.name)
-    if existing_park:
-        raise HTTPException(status_code=400, detail="Park with this name already exists")
+    #existing_park = crud.find_park(db=db, park_name=park.name)
+    #if existing_park:
+    #    raise HTTPException(status_code=400, detail="Park with this name already exists")
     return crud.create_park(db=db, park=park)
 
 
@@ -328,6 +332,36 @@ async def delete_park(park_id: str, db: Session = Depends(get_db), park: schemas
     park = crud.delete_park(db=db, park_name=park.name)
     return park
 
+
+@app.post("/reservation/{user_id}", tags=["reservations"])
+async def make_reservation(user_id: str, reservation: schemas.ReservationCreate, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_active_user)):
+    court = crud.get_court(db=db, id=reservation.court_id)
+    if not court:
+        raise HTTPException(status_code=404, detail="Court not found")
+    available, detail = crud.check_court_available(db=db, reservation=reservation, court=court)
+    if not available:
+        raise HTTPException(status_code=409, detail=detail)
+    reserved = crud.reserve_court(db=db, reservation=reservation, user=current_user)
+    return reserved
+
+
+@app.get("/reservation/court/{court_id}", tags=["reservations"])
+async def get_reservations_for_court(court_id: str, date_str: str | None = None, db: Session = Depends(get_db)):
+    if not crud.get_court(db=db, id=court_id):
+        raise HTTPException(status_code=404, detail="Court not found")
+    return crud.get_reservations_for_court(db=db, court_id=court_id, date_str=date_str)
+
+
+@app.get("/reservation/facility/{facility_id}", tags=["reservations"])
+async def get_reservations_for_facility(facility_id: str, date_str: str | None = None, db: Session = Depends(get_db)):
+    if not crud.get_facility(db=db, id=facility_id):
+        raise HTTPException(status_code=404, detail="Facility not found")
+    return crud.get_reservations_for_facility(db=db, facility_id=facility_id, date_str=date_str)
+
+
+@app.get("/reservation/user/{user_id}", tags=["reservations"])
+async def get_reservations_for_current_user(user_id: str, date_str: str | None = None, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_active_user)):
+    return crud.get_reservations_for_user(db=db, user=current_user, date_str=date_str)
 
 @app.post("/user/{email}/password_reset")
 async def reset_password_request(email: str, db: Session = Depends(get_db)):

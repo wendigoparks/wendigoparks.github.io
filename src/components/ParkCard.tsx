@@ -38,8 +38,8 @@ const ParkCard = (props: any): JSX.Element => {
             {/*Paper gives the elevated look*/}
           <Paper elevation={8}  style={{height: '300px'}}>
             <Card style={{height: '300px'}}>
-                <CardActionArea onClick={() => {
-                    navigate(`/park/${props.park.id}`);
+                <CardActionArea style={{height: '300px'}} onClick={() => { 
+                    if (!props.notClickable) { navigate(`/park/${props.park.id}`); }
                     }}>
                     <CardMedia
                         component="img"
@@ -51,8 +51,8 @@ const ParkCard = (props: any): JSX.Element => {
                         <Typography gutterBottom variant="h5" component="div">
                             {name}
                         </Typography>
-                        <Typography variant="body2">
-                            Address: {props.park.address}
+                        <Typography variant="body2" sx={{textDecoration: 'underline'}} display="inline" >
+                            {props.park.address}
                         </Typography>
                         <Typography variant="body2" style={{paddingLeft:'5px'}}>
                             ✆ {props.park.phone_nr}

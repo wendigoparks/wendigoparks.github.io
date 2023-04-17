@@ -163,6 +163,7 @@ const Login = () => {
                         style={{width: 500}}
                         onClick={() => createAccount()} 
                         variant="contained" 
+                        color="secondary"
                         disabled={!(username.trim()) || !(password.trim()) || !(email.trim())}
                     >
                         Create Account
@@ -226,7 +227,7 @@ const Login = () => {
                     </Button>
                 </div>
         }
-        <h1>Forgot your old password? that sucks make a new account and start over</h1>
+        <h1>Accounts allow you to make custom reservations!</h1>
         </div>
     )
 }
