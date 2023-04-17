@@ -11,3 +11,12 @@
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
     z-index: -1;
 }
+
+.logoImg {
+    border: 5px solid #555;
+}
+
+h3 {
+    color: #727272;
+    font-weight: normal;
+}
