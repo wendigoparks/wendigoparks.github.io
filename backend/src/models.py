@@ -44,6 +44,13 @@ class Facility(Base):
     type = Column(String)
     capacity = Column(Integer)
     image_url = Column(String)
+    monday_hours = Column(String)
+    tuesday_hours = Column(String)
+    wednesday_hours = Column(String)
+    thursday_hours = Column(String)
+    friday_hours = Column(String)
+    saturday_hours = Column(String)
+    sunday_hours = Column(String)
     park_id = Column(String, ForeignKey("parks.id"))
 
 class Court(Base):

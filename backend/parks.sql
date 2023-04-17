@@ -90,3 +90,12 @@ CREATE TABLE IF NOT EXISTS reservations_joined (
     FOREIGN KEY (reservation_joined)
         REFERENCES reservations(id)
 );
+
+ALTER TABLE facilities ADD COLUMN monday_hours VARCHAR(11);
+ALTER TABLE facilities ADD COLUMN tuesday_hours VARCHAR(11);
+ALTER TABLE facilities ADD COLUMN wednesday_hours VARCHAR(11);
+ALTER TABLE facilities ADD COLUMN thursday_hours VARCHAR(11);
+ALTER TABLE facilities ADD COLUMN friday_hours VARCHAR(11);
+ALTER TABLE facilities ADD COLUMN saturday_hours VARCHAR(11);
+ALTER TABLE facilities ADD COLUMN sunday_hours VARCHAR(11);
+ALTER TABLE reservations ADD INDEX(user_id, date);

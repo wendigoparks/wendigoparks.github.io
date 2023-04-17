@@ -2,6 +2,8 @@ from random import randint
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from uuid import uuid4
+from datetime import time, date, datetime
+from fastapi import HTTPException
 
 from . import models, schemas
 
@@ -43,6 +45,13 @@ def create_park(db: Session, park: schemas.ParkCreate):
                 capacity = facility.capacity,
                 image_url = facility.image_url,
                 park_id = db_park.id,
+                monday_hours = facility.monday_hours,
+                tuesday_hours = facility.tuesday_hours,
+                wednesday_hours = facility.wednesday_hours,
+                thursday_hours = facility.thursday_hours,
+                friday_hours = facility.friday_hours,
+                saturday_hours = facility.saturday_hours,
+                sunday_hours = facility.sunday_hours,
             )
             db.add(db_facility)
             db.commit()
@@ -76,6 +85,13 @@ def create_facility(db: Session, facility: schemas.FacilityCreate):
         capacity = facility.capacity,
         image_url = facility.image_url,
         park_id = facility.park_id,
+        monday_hours = facility.monday_hours,
+        tuesday_hours = facility.tuesday_hours,
+        wednesday_hours = facility.wednesday_hours,
+        thursday_hours = facility.thursday_hours,
+        friday_hours = facility.friday_hours,
+        saturday_hours = facility.saturday_hours,
+        sunday_hours = facility.sunday_hours,
     )
     db.add(db_facility)
     db.commit()
@@ -272,4 +288,118 @@ def get_facilities_and_courts_for_park(db: Session, id: str):
             facility_index += 1
         facilities[facility_index].courts.append(court)
     return facilities
-    
+
+
+def check_court_available(db: Session, reservation: schemas.ReservationCreate, court: schemas.Court):
+    reservation_date = date_from_str(reservation.date)
+    start_time = time_from_str(reservation.start_time)
+    end_time = time_from_str(reservation.end_time)
+    if start_time >= end_time:
+        return False, "Start time must be before end time"
+    if reservation_date < date.today():
+        return False, "Cannot reserve a date in the past"
+    elif reservation_date == date.today():
+        if start_time < datetime.now().time():
+            return False, "Cannot reserve a date in the past"
+    facility = get_facility(db, court.facility_id)
+    day_of_week = reservation_date.weekday()
+    match day_of_week:
+        case 0:
+            hours = facility.monday_hours
+        case 1:
+            hours = facility.tuesday_hours
+        case 2:
+            hours = facility.wednesday_hours
+        case 3:
+            hours = facility.thursday_hours
+        case 4:
+            hours = facility.friday_hours
+        case 5:
+            hours = facility.saturday_hours
+        case 6:
+            hours = facility.sunday_hours
+        case _:
+            return False, "Server error"
+    if not hours:
+        return False, "Reservation must be on a day where the facility is open"
+    open_time, close_time = hours.split('-')
+    open_time = time_from_str(open_time)
+    close_time = time_from_str(close_time)
+    if start_time < open_time or end_time > close_time:
+        return False, "Reservation must be during facility hours"
+    reservations = db.query(models.Reservation).where(models.Reservation.court_id == reservation.court_id and models.Reservation.date == reservation.date).order_by(models.Reservation.start_time).all()
+    for db_reservation in reservations:
+        if db_reservation.end_time > start_time:
+            if db_reservation.start_time < end_time:
+                return False, "Reservation must not overlap with existing reservation"
+            else:
+                return True, ""
+    return True, ""
+
+
+def reserve_court(db: Session, reservation: schemas.ReservationCreate, user: schemas.User):
+    db_reservation = models.Reservation(
+        id = str(uuid4()),
+        date = date_from_str(reservation.date),
+        start_time = time_from_str(reservation.start_time),
+        end_time = time_from_str(reservation.end_time),
+        user_id = user.id,
+        court_id = reservation.court_id,
+        group_size = reservation.group_size,
+        number_can_join = reservation.number_can_join_total,
+        number_can_join_total = reservation.number_can_join_total,
+    )
+    db.add(db_reservation)
+    db.commit()
+    db.refresh(db_reservation)
+    return db_reservation
+
+
+def get_reservations_for_court(db: Session, court_id: str, date_str: str | None = None):
+    query = db.query(models.Reservation).where(models.Reservation.court_id == court_id)
+    if date_str:
+        date_obj = date_from_str(date_str)
+        query = query.where(models.Reservation.date == date_obj)
+    return query.order_by(models.Reservation.date, models.Reservation.start_time).all()
+
+
+def get_reservations_for_facility(db: Session, facility_id: str, date_str: str | None = None):
+    courts = get_courts_for_facility(db=db, id=facility_id)
+    if not courts:
+        return []
+    court_ids = [(models.Reservation.court_id == court.id) for court in courts]
+    query = db.query(models.Reservation).where(or_(*court_ids))
+    if date_str:
+        date_obj = date_from_str(date_str)
+        query = query.where(models.Reservation.date == date_obj)
+    return query.order_by(models.Reservation.court_id, models.Reservation.date, models.Reservation.start_time).all()
+
+
+def get_reservations_for_user(db: Session, user: schemas.User, date_str: str | None = None):
+    query = db.query(models.Reservation).where(models.Reservation.user_id == user.id)
+    if date_str:
+        date_obj = date_from_str(date_str)
+        query = query.where(models.Reservation.date == date_obj)
+    return query.order_by(models.Reservation.date, models.Reservation.start_time).all()
+
+
+def time_from_str(time_str: str):
+    try:
+        hour, minute = time_str.split(":")
+        hour = int(hour)
+        minute = int(minute)
+        return time(hour, minute)
+    except:
+        raise HTTPException(status_code=400, detail="Invalid time string")
+
+
+def str_from_time(time_obj: time):
+    return time_obj.strftime("%H:%M")
+
+
+def date_from_str(date_str: str):
+    try:
+        split_date = date_str.split('-')
+        return date(int(split_date[0]), int(split_date[1]), int(split_date[2]))
+    except:
+        raise HTTPException(status_code=400, detail="Invalid date string")

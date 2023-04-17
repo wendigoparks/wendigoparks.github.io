@@ -263,11 +263,15 @@ async def get_court(court_id: str, db: Session = Depends(get_db)):
 
 @app.get("/facilities/{park_id}", response_model=list[schemas.Facility])
 async def get_facilities_by_park(park_id: str, db: Session = Depends(get_db)):
+    if not crud.get_park(db=db, id=park_id):
+        raise HTTPException(status_code=404, detail="Park not found")
     return crud.get_facilities_for_park(db=db, id=park_id)
 
 
 @app.get("/courts/{facility_id}", response_model=list[schemas.Court])
 async def get_courts_by_facility(facility_id: str, db: Session = Depends(get_db)):
+    if not crud.get_facility(db=db, id=facility_id):
+        raise HTTPException(status_code=404, detail="Facility not found")
     return crud.get_courts_for_facility(db=db, id=facility_id)
 
 
@@ -331,3 +335,33 @@ async def delete_park(park_id: str, db: Session = Depends(get_db), park: schemas
     park = crud.delete_park(db=db, park_name=park.name)
     return park
 
+
+@app.post("/reservation/{user_id}", tags=["reservations"])
+async def make_reservation(user_id: str, reservation: schemas.ReservationCreate, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_active_user)):
+    court = crud.get_court(db=db, id=reservation.court_id)
+    if not court:
+        raise HTTPException(status_code=404, detail="Court not found")
+    available, detail = crud.check_court_available(db=db, reservation=reservation, court=court)
+    if not available:
+        raise HTTPException(status_code=409, detail=detail)
+    reserved = crud.reserve_court(db=db, reservation=reservation, user=current_user)
+    return reserved
+
+
+@app.get("/reservation/court/{court_id}", tags=["reservations"])
+async def get_reservations_for_court(court_id: str, date_str: str | None = None, db: Session = Depends(get_db)):
+    if not crud.get_court(db=db, id=court_id):
+        raise HTTPException(status_code=404, detail="Court not found")
+    return crud.get_reservations_for_court(db=db, court_id=court_id, date_str=date_str)
+
+
+@app.get("/reservation/facility/{facility_id}", tags=["reservations"])
+async def get_reservations_for_facility(facility_id: str, date_str: str | None = None, db: Session = Depends(get_db)):
+    if not crud.get_facility(db=db, id=facility_id):
+        raise HTTPException(status_code=404, detail="Facility not found")
+    return crud.get_reservations_for_facility(db=db, facility_id=facility_id, date_str=date_str)
+
+
+@app.get("/reservation/user/{user_id}", tags=["reservations"])
+async def get_reservations_for_current_user(user_id: str, date_str: str | None = None, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_active_user)):
+    return crud.get_reservations_for_user(db=db, user=current_user, date_str=date_str)
