@@ -14,6 +14,9 @@ from pydantic import BaseModel, ValidationError
 from . import crud, models, schemas, utils
 from .database import SessionLocal, engine
 
+
+import smtplib, ssl#temp
+
 models.Base.metadata.create_all(bind=engine)
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -51,7 +54,7 @@ def get_db():
         db.close()
         
 # Dependency
-oauth2_scheme = utils.OAuth2PasswordBearerWithCookie(tokenUrl="token",scopes={'Admin' : "Info", 'me' : "Info"},)
+oauth2_scheme = utils.OAuth2PasswordBearerWithCookie(tokenUrl="token")
 
 
 class Token(BaseModel):
@@ -84,9 +87,7 @@ def authenticate_user(db: Session, username: str, password: str):
     return user
 
 
-
-
-def create_jwt_token(data: dict, expires_delta: timedelta | None = None):
+def create_jwt_token(data: dict, expires_delta: timedelta | None = None, key = SECRET_KEY):
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -124,7 +125,7 @@ async def get_park_request(security_scopes: SecurityScopes, park_id: str = Path(
         token_data = TokenData(scopes=token_scopes, username=username)
     except (JWTError, ValidationError):
         raise credentials_exception
-    park = crud.find_park(db=db, park_name=park_name)
+    park = crud.get_park(db=db, id=park_id)
     if park is None:
         raise credentials_exception
     for scope in security_scopes.scopes:
@@ -195,7 +196,7 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
 
     #define scopes
     if(user.admin):
-        scopes.append("Admin")
+        scopes.append("admin")
     scopes.append("read:"+str(user.id))
     scopes.append("write:"+str(user.id))
 
@@ -203,7 +204,7 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
     access_token = create_jwt_token(
         data={"sub": user.username, "scopes": scopes}, expires_delta=access_token_expires
     )
-    response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True)  #set HttpOnly cookie in response
+    response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True, secure=True)  #set HttpOnly cookie in response
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -312,16 +313,12 @@ async def create_court(court: schemas.CourtCreate, db: Session = Depends(get_db)
     return crud.create_court(db=db, court=court)
 
 
-
-
 @app.put("/park/update/{park_id}", response_model=schemas.Park)
 async def update_park(park_id: str, park_update: schemas.ParkCreate, db: Session = Depends(get_db), park: schemas.Park = Security(get_park_request, scopes=['update'])):
     existing_park = crud.update_park(db=db, park_id=park_id, park=park_update)
     if not existing_park:
         raise HTTPException(status_code=404, detail="Park not found")
     return existing_park
-
-
 
 
 @app.delete("/park/{park_id}", response_model=schemas.Park)
@@ -331,3 +328,39 @@ async def delete_park(park_id: str, db: Session = Depends(get_db), park: schemas
     park = crud.delete_park(db=db, park_name=park.name)
     return park
 
+
+@app.post("/user/{email}/password_reset")
+async def reset_password_request(email: str, db: Session = Depends(get_db)):
+    user = crud.find_user(db=db, email=email)
+    if not user:
+        raise HTTPException(status_code=400, detail="Email is not registered to a valid user")
+    
+    access_token_expires = timedelta(minutes=10)
+    scopes = []
+
+    #define scopes
+    scopes.append("reset:"+str(user.id))
+
+    access_token = create_jwt_token(
+        data={"sub": user.username, "scopes": scopes}, expires_delta=access_token_expires, key=user.hashed_pswd
+    )
+    '''
+    port = 465  # For SSL
+    smtp_server = "smtp.gmail.com"
+    sender_email = "testingaddressjoeyt@gmail.com"  # Enter your address
+    receiver_email = user.email  # Enter receiver address
+    password = "VO6:+,8.bs%_=xU"
+
+    user_name = user.full_name
+    link = "http://localhost:3000/Home?access_token"+access_token
+    message = """\
+    Subject: User Password Reset Request
+
+    Hello, {user_name} please click the following link in order to reset your windigo password {link}."""
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, message)
+    '''
+    return access_token

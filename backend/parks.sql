@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS users (
 	disabled BOOL default false,
 	hashed_pswd VARCHAR(256) NOT NULL,
     admin BOOL default false
+    park_manager INTEGER default 0
 );
 
 CREATE TABLE IF NOT EXISTS reservations (
