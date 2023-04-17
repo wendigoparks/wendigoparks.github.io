@@ -9,6 +9,9 @@ import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import dayjs, {Dayjs} from "dayjs";
+import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 
 const Facility = (props: any): JSX.Element => {
 
@@ -18,6 +21,7 @@ const Facility = (props: any): JSX.Element => {
     const [endMinute, setEndMinute] = useState<number| string>(0);
     const [amPM, setAMPM] = useState(false) //false for am, true for pm
     const [court, setCourt] = useState<number| string>(1);
+    const [date, setDate] = useState<Dayjs|null>(dayjs(new Date()));
 
     // needs to be passed props.facility and need to define facility opitons and json structure
     // ie example structure:
@@ -72,7 +76,12 @@ const Facility = (props: any): JSX.Element => {
                                 backgroundColor: "#d0e0d1"
                             }}
                             >
-                                <FormControl variant="filled" sx={{ m: 1, minWidth: 125}}>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker sx={{minWidth: 150,  marginLeft: 2, marginTop: 3  }} label="Date"
+                                                onChange={(val) => setDate(val)} value={date}
+                                    />
+                                </LocalizationProvider>
+                                <FormControl variant="filled" sx={{ m: 1,maxWidth: 170}}>
                                     <InputLabel >Court</InputLabel>
                                     <Select value={court} onChange={e => setCourt(e.target.value)} sx={{
                                         m: 2
@@ -82,7 +91,7 @@ const Facility = (props: any): JSX.Element => {
                                         )}
                                     </Select>
                                 </FormControl>
-                                <FormControl variant="filled" sx={{ m: 1, minWidth: 125}}>
+                                <FormControl variant="filled" sx={{ m: 1, maxWidth: 170}}>
                                     <InputLabel >Start Hour</InputLabel>
                                     <Select value={startHour} onChange={e => setStartHour(e.target.value)} sx={{
                                         m: 2
@@ -94,7 +103,7 @@ const Facility = (props: any): JSX.Element => {
                                         }
                                     </Select>
                                 </FormControl>
-                                <FormControl variant="filled" sx={{ m: 1, minWidth: 125}}>
+                                <FormControl variant="filled" sx={{ m: 1, maxWidth: 170}}>
                                     <InputLabel >Minute</InputLabel>
                                     <Select value={startMinute} onChange={e => setStartMinute(e.target.value)} sx={{
                                         m: 2,
@@ -106,7 +115,7 @@ const Facility = (props: any): JSX.Element => {
                                         <MenuItem value={45}>45</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <FormControl variant="filled" sx={{ m: 1, minWidth: 125}}>
+                                <FormControl variant="filled" sx={{ m: 1, maxWidth: 170}}>
                                     <InputLabel >End Hour</InputLabel>
                                     <Select value={endHour} onChange={e => setEndHour(e.target.value)} sx={{
                                         m: 2
@@ -118,7 +127,7 @@ const Facility = (props: any): JSX.Element => {
                                         }
                                     </Select>
                                 </FormControl>
-                                <FormControl variant="filled" sx={{ m: 1, minWidth: 125}}>
+                                <FormControl variant="filled" sx={{ m: 1, maxWidth: 170}}>
                                     <InputLabel >Minute</InputLabel>
                                     <Select value={endMinute} onChange={e => setEndMinute(e.target.value)} sx={{
                                         m: 2,
@@ -130,7 +139,7 @@ const Facility = (props: any): JSX.Element => {
                                         <MenuItem value={45}>45</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <FormControl variant="filled" sx={{ m: 1, minWidth: 125}}>
+                                <FormControl variant="filled" sx={{ m: 1, maxWidth: 170}}>
                                     <InputLabel >Participants</InputLabel>
                                     <Select defaultValue={1} sx={{
                                         m: 2
@@ -182,8 +191,9 @@ const Facility = (props: any): JSX.Element => {
                                                     paddingBottom: 1,
                                                     paddingTop: 1,
                                                     backgroundColor: ((!amPM&&startHour<=i&&endHour>=i)||(amPM&&startHour<=i+12&&endHour>=i+12))
-                                                    &&!((i==startHour&&(startMinute>j*15)||(i==endHour&&(endMinute<=j*15))))
-                                                        ? "forestgreen":"white"
+                                                    &&!((i==startHour&&(startMinute>j*15)||(i==endHour&&(endMinute<=j*15)))||
+                                                        ((amPM&&i+12==startHour)&&(startMinute>j*15)||((amPM&&i+12==endHour)&&(endMinute<=j*15))))
+                                                        ? "forestgreen":(false?"red":"white")//Add logic here to check if reservation is valid or if slot is full
                                                 }}
                                             >
                                                 <span className={"timeText"}>{amPM? i+12: i}:{(j*15).toString().padStart(2, '0')}</span>
