@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS users (
 	full_name VARCHAR(128),
 	disabled BOOL default false,
 	hashed_pswd VARCHAR(256) NOT NULL,
-    admin BOOL default false
+    admin BOOL default false,
     park_manager INTEGER default 0
 );
 
@@ -100,3 +100,5 @@ ALTER TABLE facilities ADD COLUMN friday_hours VARCHAR(11);
 ALTER TABLE facilities ADD COLUMN saturday_hours VARCHAR(11);
 ALTER TABLE facilities ADD COLUMN sunday_hours VARCHAR(11);
 ALTER TABLE reservations ADD INDEX(user_id, date);
+ALTER TABLE parks MODIFY COLUMN image_url VARCHAR(2048);
+ALTER TABLE facilities MODIFY COLUMN image_url VARCHAR(2048);
