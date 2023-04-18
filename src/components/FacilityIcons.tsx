@@ -31,7 +31,7 @@ const allFacilities: string[] = [
     'Other'
 ]
 
-const facilitesToIcon: { [key: string]: ReactElement<any, any> } = {
+const facilityToIcon: { [key: string]: ReactElement<any, any> } = {
     'Basketball': <SportsBasketballOutlinedIcon fontSize='inherit' key={uuidv4.v4()}/>,
     'Baseball': <SportsBaseballOutlinedIcon fontSize='inherit' key={uuidv4.v4()} />,
     'Dog Park': <PetsOutlinedIcon fontSize='inherit' key={uuidv4.v4()} />,
@@ -47,7 +47,7 @@ const facilitesToIcon: { [key: string]: ReactElement<any, any> } = {
 }
 
 const textArrayToSymbolArray = (textArray: string[]):any => {
-    return textArray.map(text => facilitesToIcon[text]);
+    return textArray.map(text => facilityToIcon[text]);
 }
 
-export {allFacilities, facilitesToIcon, textArrayToSymbolArray};
+export {allFacilities, facilityToIcon, textArrayToSymbolArray};

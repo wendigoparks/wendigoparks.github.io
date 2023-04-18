@@ -1,6 +1,6 @@
 // Page to display one individual facility and its schedule
 import React, {useState} from "react";
-import {facilitesToIcon, textArrayToSymbolArray} from './FacilityIcons';
+import {facilityToIcon, textArrayToSymbolArray} from './FacilityIcons';
 import SportsTennisOutlinedIcon from "@mui/icons-material/SportsTennisOutlined";
 import {Grid, IconButton, Select, Stack} from "@mui/material";
 import Paper from "@mui/material/Paper";
@@ -46,6 +46,8 @@ const Facility = (props: any): JSX.Element => {
 
     */
 
+    console.log(props.facility);
+
     function handleSubmit() {
         if(startHour>endHour||(startHour==endHour&&startMinute>endMinute)){
             alert("End time cannot be after start time!")
@@ -68,7 +70,6 @@ const Facility = (props: any): JSX.Element => {
     return (
         <div className="Facility" style={{backgroundColor:'#AADE9EFF', }}>
             <span> 
-                {textArrayToSymbolArray([props.facility.category])}
                     <Grid container spacing={1} >
                         <Grid item xs={12}>
                             <Paper sx={{
@@ -166,7 +167,10 @@ const Facility = (props: any): JSX.Element => {
                                 }}
                             >
                                 <span className={"parkCategory"}>{toTitleCase(props.facility.category)}</span><br/>
-                                <SportsTennisOutlinedIcon className={"icon"}/><br/>
+                                <div className="facilityIcon" style={{fontSize:50}}>
+                                    {facilityToIcon[props.facility.type]}   
+                                </div>
+                                <br/>
                                 <FormControl sx={{ m: 1, marginTop: 5, minWidth: 125}}>
                                     <InputLabel >Time Display</InputLabel>
                                     <Select defaultValue={"AM"} sx={{

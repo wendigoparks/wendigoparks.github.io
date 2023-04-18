@@ -276,6 +276,7 @@ async def get_courts_by_facility(facility_id: str, db: Session = Depends(get_db)
     return crud.get_courts_for_facility(db=db, id=facility_id)
 
 
+
 @app.get("/facilities_and_courts/{park_id}", response_model=list[schemas.Facility])
 async def get_facilities_and_courts_by_park(park_id: str, db: Session = Depends(get_db)):
     return crud.get_facilities_and_courts_for_park(db=db, id=park_id)
