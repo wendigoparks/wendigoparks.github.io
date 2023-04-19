@@ -9,6 +9,8 @@ import Park from './components/Park';
 import AddPark from './components/AddPark';
 import Login from './components/Login';
 import MyAccount from './components/MyAccount';
+import PrintCourtQRCode from './components/PrintCourtQRCode';
+import CourtQR from './components/CourtQR';
 
 function App() {
     return (
@@ -20,10 +22,12 @@ function App() {
                 <Route path="/search" element={<SearchResults/>} />
                 <Route path="/parks/" element={<Parks/>} />
                 <Route path="/parks/:query" element={<Parks/>} />
+                <Route path="/court/:courtId" element={<PrintCourtQRCode/>} />
+                <Route path="/courtQR/:courtId" element={<CourtQR/>} />
                 <Route path="/add park" element={<AddPark/>} />
                 {/* Park path will be called with park id query parameter so that specific park can be retreived */}
                 <Route path="/Park/:id" element={<Park/>} />
-                <Route path="/Login" element={<Login/>} />
+                <Route path="/Login/:parkId" element={<Login/>} />
                 <Route path="/MyAccount" element={<MyAccount/>} />
                 <Route path='*' element={<Navigate to='/Home' />} />
             </Routes>

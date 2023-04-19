@@ -204,6 +204,7 @@ const Facility = (props: any): JSX.Element => {
                                                 <br/>
                                                 <span className={"capacityText"}>0/8</span>
                                             </Paper>
+                                            
                                     )}
                                     </Stack>
                                 )

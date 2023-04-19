@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
 import { checkPasswordRequirements, saveUserLoggedIn } from "./Authentication";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 /*
 Goal of this component is to allow users to login or create an account in a way that will communicate to the
 backend and save a token so the user can access their account. 
 */
+
+/*
+    TODO Login should be able to recieve a park id so that it can re-direct back to that park on completion if directed to login from a park.
+*/
+
 const Login = () => {
 
     // Save username and password as state variables with useState hook
@@ -26,7 +31,18 @@ const Login = () => {
     const createAccountEndpoint = "http://127.0.0.1:8000/users";
     
     // Allows us to navigate to the home page on successful login
+    // or back to a park page if that is where they came from
+    const [directToURL, setDirectToURL] = React.useState('/home');
     const navigate = useNavigate();
+    // get OPTIONAL parameter for park id to direct to
+    const { parkId } = useParams();
+
+    // change directToUrl if a Park id was given
+    useEffect(() => { 
+        if (parkId) {
+            setDirectToURL(`/park/${parkId}`);
+        }
+    }, [parkId]);
 
     // Login method to communicate with backend that an existing user is presenting their
     // credentials. 
@@ -54,7 +70,7 @@ const Login = () => {
                 // Should receive token back in data, need to retreive token and store it in local data!
                 // TODO Retreive and store token.
                 setTimeout(() => {
-                    navigate("/home")
+                    navigate(directToURL)
                 }, 1000);
             } else {
                 alert("Unable to Login, please verify Username and Password are correct.")   

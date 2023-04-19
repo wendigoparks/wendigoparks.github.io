@@ -29,6 +29,7 @@ function Parks() {
                 'Access-Control-Allow-Headers': 'Accept'
             },
         };
+        
         // check if a search query has been supplied in the url, if it has call
         // backend to perfrom the search, if it hasn't, retreive all parks. 
         if (query) {
