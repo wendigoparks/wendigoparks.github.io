@@ -15,7 +15,7 @@ SQLALCHEMY_DATABASE_URL = URL.create(
 )
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL
+    SQLALCHEMY_DATABASE_URL, connect_args={'ssl':{'fake_flag_to_enable_tls': True}}
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
