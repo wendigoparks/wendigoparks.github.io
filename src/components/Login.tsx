@@ -27,8 +27,8 @@ const Login = () => {
     // useEffect hook to navigate page to myAccount instead, probably unnecessary. 
 
     // Endpoints to send POST requests to backend
-    const loginEndpoint = "http://127.0.0.1:8000/token";
-    const createAccountEndpoint = "http://127.0.0.1:8000/users";
+    const loginEndpoint = "https://capstone3parksapp.azurewebsites.net/token";
+    const createAccountEndpoint = "https://capstone3parksapp.azurewebsites.net/users/";
     
     // Allows us to navigate to the home page on successful login
     // or back to a park page if that is where they came from
@@ -53,7 +53,7 @@ const Login = () => {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Access-Control-Allow-Origin':  'http://127.0.0.1:8000',
+                'Access-Control-Allow-Origin':  'https://capstone3parksapp.azurewebsites.net',
                 'Access-Control-Allow-Methods': 'POST',
             },
             body: `grant_type=&username=${username}&password=${password}&scope=&client_id=&client_secret=`,
@@ -70,7 +70,7 @@ const Login = () => {
                 // Should receive token back in data, need to retreive token and store it in local data!
                 // TODO Retreive and store token.
                 setTimeout(() => {
-                    navigate(directToURL)
+                    //navigate(directToURL)
                 }, 1000);
             } else {
                 alert("Unable to Login, please verify Username and Password are correct.")   
@@ -105,7 +105,7 @@ const Login = () => {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin':  'http://127.0.0.1:8000',
+                    'Access-Control-Allow-Origin':  'https://capstone3parksapp.azurewebsites.net',
                     'Access-Control-Allow-Methods': 'POST',
                 },
                 body: JSON.stringify(userJson)

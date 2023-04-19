@@ -27,6 +27,7 @@ function App() {
                 <Route path="/add park" element={<AddPark/>} />
                 {/* Park path will be called with park id query parameter so that specific park can be retreived */}
                 <Route path="/Park/:id" element={<Park/>} />
+                <Route path="/Login" element={<Login/>} />
                 <Route path="/Login/:parkId" element={<Login/>} />
                 <Route path="/MyAccount" element={<MyAccount/>} />
                 <Route path='*' element={<Navigate to='/Home' />} />
