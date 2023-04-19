@@ -9,7 +9,7 @@ function Parks() {
     const {query} = useParams();
 
     // the url to retreive parks from:
-    const getAllParksUrl = "http://127.0.0.1:8000/parks/";
+    const getAllParksUrl = "https://capstone3parksapp.azurewebsites.net/parks/"; // endpoint to get all parks
 
     // This will hold all of the parks retreived
     const [parks, setParks] = React.useState<any>([]);
@@ -24,7 +24,7 @@ function Parks() {
             headers: { 
                 'Access-Control-Allow-Credentials':'true',
                 'Accept': 'application/json',
-                'Access-Control-Allow-Origin':  'http://127.0.0.1:8000',
+                'Access-Control-Allow-Origin':  'https://capstone3parksapp.azurewebsites.net',
                 'Access-Control-Allow-Methods': 'GET',
                 'Access-Control-Allow-Headers': 'Accept'
             },

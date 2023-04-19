@@ -20,7 +20,7 @@ import { userIsLoggedIn } from "./Authentication";
 const AddPark = (): JSX.Element => {
 
     // Endpoint to send POST request to backend
-    const addParkEndpoint = "http://127.0.0.1:8000/park"; // "https://localhost:8000/park";
+    const addParkEndpoint = "https://capstone3parksapp.azurewebsites.net/park/"; // endpoint to add park endpoint
 
     // Default values for non-required fields if an invalid
     // input is given:
@@ -31,6 +31,7 @@ const AddPark = (): JSX.Element => {
     const defaultCapacity = "Unknown";
 
     /*
+    
         New parks need to conform to this schema
 
         name: str
@@ -92,7 +93,7 @@ const AddPark = (): JSX.Element => {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin':  'http://127.0.0.1:8000',
+                    'Access-Control-Allow-Origin':  'https://capstone3parksapp.azurewebsites.net',
                     'Access-Control-Allow-Methods': 'POST',
                 },
                 body: JSON.stringify(parkJson),

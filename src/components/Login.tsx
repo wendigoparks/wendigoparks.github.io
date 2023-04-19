@@ -70,7 +70,7 @@ const Login = () => {
                 // Should receive token back in data, need to retreive token and store it in local data!
                 // TODO Retreive and store token.
                 setTimeout(() => {
-                    //navigate(directToURL)
+                    navigate(directToURL)
                 }, 1000);
             } else {
                 alert("Unable to Login, please verify Username and Password are correct.")   
