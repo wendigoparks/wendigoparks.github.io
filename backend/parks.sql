@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS users (
 	full_name VARCHAR(128),
 	disabled BOOL default false,
 	hashed_pswd VARCHAR(256) NOT NULL,
-    admin BOOL default false
+    admin BOOL default false,
     park_manager INTEGER default 0
 );
 

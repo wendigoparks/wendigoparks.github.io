@@ -27,9 +27,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 300
 
 app = FastAPI()
 
-def fake_hash_password(password: str):
-    return "fakehashed" + password
-
 origins = [
     "http://localhost:3000/*",
     "http://localhost",
