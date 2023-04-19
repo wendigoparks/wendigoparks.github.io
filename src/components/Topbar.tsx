@@ -89,7 +89,11 @@ const ResponsiveAppBar = () => {
                         WenDiGo
                     </Typography>
 
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'flex' } }}>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'flex' }, flexWrap:'wrap' }}>
+
+
+
+                        
                         {pages.map((page) => (
                             <Button
                                 key={page}

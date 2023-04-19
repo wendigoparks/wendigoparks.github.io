@@ -14,6 +14,7 @@ const userIsLoggedIn = (): boolean => {
     //    return !!savedToken;
 
     // NOW verify via GET request to /users/me
+    /*
     fetch(getUserInfoUrl, {
         method: 'GET', 
         headers: { 'Access-Control-Allow-Credentials':'true',
@@ -38,6 +39,7 @@ const userIsLoggedIn = (): boolean => {
     .catch((err) => {
         return false;
     });
+    */
     return !!localStorage.getItem("userToken");
 }
 
