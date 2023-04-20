@@ -38,7 +38,7 @@ const UserReservations = (props: any): JSX.Element => {
             setReservations(data);
         }) // end of .then where data is retrieved for park
         .catch(() => {
-            console.log("ERROR Failed to retrieve info for park with id:" + id);
+            console.log("ERROR Failed to retrieve info");
         })
       }, [])
 
@@ -46,7 +46,7 @@ const UserReservations = (props: any): JSX.Element => {
     return (
         <div>
             <p> user has the following reservations: </p>
-            
+
         </div>
     )
  }
