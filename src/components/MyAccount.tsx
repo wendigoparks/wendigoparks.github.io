@@ -18,7 +18,7 @@ const MyAccount = () => {
     const navigate = useNavigate();
 
     // url for endpoint to get user data
-    const getUserInfoUrl = "http://127.0.0.1:8000/users/me";
+    const getUserInfoUrl = "https://capstone3parksapp.azurewebsites.net/users/me";
 
     // First get user information from database
     // This will run once on component mounting
@@ -28,7 +28,7 @@ const MyAccount = () => {
             method: 'GET', 
             headers: { 'Access-Control-Allow-Credentials':'true',
                 'Accept': 'application/json',
-                'Access-Control-Allow-Origin':  'http://127.0.0.1:8000',
+                'Access-Control-Allow-Origin':  'https://capstone3parksapp.azurewebsites.net/',
                 'Access-Control-Allow-Methods': 'GET',
                 'Access-Control-Allow-Headers': 'Accept',
                 'authjwt_cookie_samesite': 'none'},
@@ -77,7 +77,8 @@ const MyAccount = () => {
             <h3>Your username is {userData.username}</h3>
             <h3>Your email address is {userData.email}</h3>
             <p>Show user's calendar of reservations here:</p>
-            <p>Show other users you are following: </p>
+            <p>Show other users you are following: and make each one clickable to view their schedules. </p>
+            <p>Let users put in usernames of other users to follow them here: </p>
         </div>
     )
 }
