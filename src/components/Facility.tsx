@@ -1,5 +1,5 @@
 // Page to display one individual facility and its schedule
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {facilityToIcon, textArrayToSymbolArray} from './FacilityIcons';
 import SportsTennisOutlinedIcon from "@mui/icons-material/SportsTennisOutlined";
 import {Grid, IconButton, Select, Stack} from "@mui/material";
@@ -21,7 +21,9 @@ const Facility = (props: any): JSX.Element => {
     const [endMinute, setEndMinute] = useState<number| string>(0);
     const [amPM, setAMPM] = useState(false) //false for am, true for pm
     const [court, setCourt] = useState<number| string>(1);
+    const [participants, setParticipants] = useState<number| string>(1);
     const [date, setDate] = useState<Dayjs|null>(dayjs(new Date()));
+    const [res, setRes] = useState<any[]>([]);
 
     // needs to be passed props.facility and need to define facility opitons and json structure
     // ie example structure:
@@ -46,7 +48,39 @@ const Facility = (props: any): JSX.Element => {
 
     */
 
-    console.log(props.facility);
+    console.log("Facility: ", props.facility);
+
+    const getResUrl = "https://capstone3parksapp.azurewebsites.net/reservation/facility/" + props.facility.id; //
+
+    useEffect(() => {
+        console.log('Retreiving from Backend...');
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Access-Control-Allow-Credentials':'true',
+                'Accept': 'application/json',
+                'Access-Control-Allow-Origin':  'https://capstone3parksapp.azurewebsites.net/',
+                'Access-Control-Allow-Methods': 'GET',
+                'Access-Control-Allow-Headers': 'Accept'
+            },
+        };
+        fetch(getResUrl, requestOptions )
+            .then(response => response.json())
+            .then(data => {
+                console.log("Retrived the following data:\n");
+                console.log(data);
+
+                setRes(data);
+
+            }) // end of .then where data is retrieved for park
+            .catch(() => {
+                console.log("ERROR Failed to retrieve info for facility with id:" + props.facility.id);
+                //navigate(-1); // send user back a page
+            })
+    }, [props.facility.id])
+
+    //Need the user ID here
+    const addResEndpoint = "https://capstone3parksapp.azurewebsites.net/reservation/" + "madeUpUser"; // endpoint to add park endpoint
 
     function handleSubmit() {
         if(startHour>endHour||(startHour==endHour&&startMinute>endMinute)){
@@ -55,6 +89,48 @@ const Facility = (props: any): JSX.Element => {
         else{
             //Get reservations for court
             //Ensure there are no conflicts
+            // Make sure necessary park data is provided IE
+            // name and address, set everything else to defaults if not
+            // provided, and then try to send this new park to the backend as a new park.
+            // For now assume park name and address are only required attributes
+            if (true) {
+                // build park JSON object and send it to backend endpoint:
+                const reservationJson = {
+                    date: date?.toDate(),
+                    start_time: startHour+":"+startMinute+":00",
+                    end_time: endHour+":"+endMinute+":00",
+                    group_size: participants,
+                    court_id: props.facility.courts[court as number -1].id
+                }
+
+                console.log(reservationJson);
+                // Using Fetch API
+                fetch(addResEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin':  'https://capstone3parksapp.azurewebsites.net',
+                        'Access-Control-Allow-Methods': 'POST',
+                    },
+                    body: JSON.stringify(reservationJson),
+                    credentials: 'include'
+                })
+                    .then((response) => {
+                        if (!response.ok) {throw new Error(String(response.status)); }
+                        else {return response.json(); } })
+                    .then((data) => {
+                        console.log(data);
+                        // successfully posted! clear fields and alert user
+                        alert("Congratulations the park has been successfully added!");
+                    })
+                    .catch((err) => {
+                        console.log(err.message);
+                        alert("Unable to add reservation to the database")
+                    });
+
+            } else {
+                alert("Invalid reservation.")
+            }
         }
     }
 
@@ -87,7 +163,7 @@ const Facility = (props: any): JSX.Element => {
                                     <Select value={court} onChange={e => setCourt(e.target.value)} sx={{
                                         m: 2
                                     }}>
-                                        {Array(4).fill(true).map((_, i) =>
+                                        {Array(typeof(props.facility.courts)!='undefined'?props.facility.courts.length:1).fill(true).map((_, i) =>
                                             <MenuItem value={i+1} key={"c"+i}>{i+1}</MenuItem>
                                         )}
                                     </Select>
@@ -142,7 +218,7 @@ const Facility = (props: any): JSX.Element => {
                                 </FormControl>
                                 <FormControl variant="filled" sx={{ m: 1, maxWidth: 170}}>
                                     <InputLabel >Participants</InputLabel>
-                                    <Select defaultValue={1} sx={{
+                                    <Select value={participants} onChange={e => setParticipants(e.target.value)} sx={{
                                         m: 2
                                     }}>
                                         {Array(4).fill(true).map((_, i) =>
@@ -170,7 +246,7 @@ const Facility = (props: any): JSX.Element => {
                                 <div className="facilityIcon" style={{fontSize:50}}>
                                     {facilityToIcon[props.facility.type]}   
                                 </div>
-                                <br/>
+                                <span>{typeof(props.facility.courts)!='undefined'?props.facility.courts[court as number -1].name:""}</span>
                                 <FormControl sx={{ m: 1, marginTop: 5, minWidth: 125}}>
                                     <InputLabel >Time Display</InputLabel>
                                     <Select defaultValue={"AM"} sx={{

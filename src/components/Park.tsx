@@ -19,11 +19,12 @@ const Park = (props: any): JSX.Element => {
     const { id } = useParams();
 
     // the url to retreive a specific park from:
-    const getParkUrl = "http://127.0.0.1:8000/park/" + id; // + park_id
+    const getParkUrl = "https://capstone3parksapp.azurewebsites.net/park/" + id; // + park_id
     // the url to retreive a specific park from:
-    const getParkFacilitiesUrl = "http://127.0.0.1:8000/facilities/" + id; // + park_id
+    const getParkFacilitiesUrl = "https://capstone3parksapp.azurewebsites.net/facilities_and_courts/" + id; // + park_id
     // the url to retreive a specific park from:
-    const getParkCourtsUrl = "http://127.0.0.1:8000/courts/"; // + facility_id
+    //const getParkCourtsUrl = "https://capstone3parksapp.azurewebsites.net/courts/" + id; // + facility_id
+
 
     // This will hold all of the parks retreived
     const [park, setPark] = React.useState<any>({});
@@ -31,6 +32,9 @@ const Park = (props: any): JSX.Element => {
 
     // Hold park's facilities
     const [facilities, setFacilities] = React.useState<any>([{}]);
+
+    // Hold park's courts
+    //const [courts, setCourts] = React.useState<any>([{}]);
 
     // First get all parks from database
     // This will run once on component mounting
@@ -42,7 +46,7 @@ const Park = (props: any): JSX.Element => {
             headers: { 
                 'Access-Control-Allow-Credentials':'true',
                 'Accept': 'application/json',
-                'Access-Control-Allow-Origin':  'http://127.0.0.1:8000',
+                'Access-Control-Allow-Origin':  'https://capstone3parksapp.azurewebsites.net/',
                 'Access-Control-Allow-Methods': 'GET',
                 'Access-Control-Allow-Headers': 'Accept'
             },
@@ -65,18 +69,16 @@ const Park = (props: any): JSX.Element => {
             .then(response => response.json())
             .then(data => {
                 // should be receiving facilities here
-                console.log("received the following facilities:");
-                console.log(data);
+                console.log("received the following facilities:", data);
                 // save facilities retreived
                 setFacilities(data);
             })
 
 
-
         }) // end of .then where data is retrieved for park
         .catch(() => {
             console.log("ERROR Failed to retrieve info for park with id:" + id);
-            navigate(-1); // send user back a page
+            //navigate(-1); // send user back a page
         })
       }, [id])
     
@@ -122,7 +124,7 @@ const Park = (props: any): JSX.Element => {
                             </Grid>
                             <Grid item>
                                 <Typography variant="body2">
-                                    <span>Desc goes here</span>
+                                    <span>{park.description}</span>
                                 </Typography>
                             </Grid>
                         </Grid>
