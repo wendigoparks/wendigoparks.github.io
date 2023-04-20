@@ -234,7 +234,8 @@ const Facility = (props: any): JSX.Element => {
                                 </Button>
                             </Paper>
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid container wrap='nowrap' columns={2}>
+                        <Grid item xs={"auto"} sx={{mx: 'auto', my: 1}}>
                             <Paper
                                 sx={{
                                     height: 250,
@@ -258,7 +259,7 @@ const Facility = (props: any): JSX.Element => {
                                 </FormControl>
                             </Paper>
                         </Grid>
-                      <Grid item xs={10}>
+                      <Grid item xs={"auto"} sx={{margin: 'auto'}}>
                         <Grid container justifyContent="center" spacing={0}>
                             {
                                 Array(12).fill(true).map((_, i) =>
@@ -266,8 +267,8 @@ const Facility = (props: any): JSX.Element => {
                                         {Array(4).fill(true).map((_, j) =>
                                             <Paper
                                                 sx={{
-                                                    paddingLeft: 2,
-                                                    paddingRight: 2,
+                                                    paddingLeft: 1,
+                                                    paddingRight: 1,
                                                     paddingBottom: 1,
                                                     paddingTop: 1,
                                                     backgroundColor: ((!amPM&&startHour<=i&&endHour>=i)||(amPM&&startHour<=i+12&&endHour>=i+12))
@@ -286,6 +287,7 @@ const Facility = (props: any): JSX.Element => {
                                 )
                             }
                         </Grid>
+                      </Grid>
                     </Grid>
                     </Grid>
             </span>
