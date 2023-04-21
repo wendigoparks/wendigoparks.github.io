@@ -8,6 +8,7 @@ const UserReservations = (props: any): JSX.Element => {
 
     // the url to get the user's reservations
     const getUserReservationsUrl = "https://capstone3parksapp.azurewebsites.net/reservation/user/" + props.userId;
+    console.log("user id is", props.userId);
 
     // This will hold all of the reservations retreived
     const [reservations, setReservations] = React.useState<any[]>([]);

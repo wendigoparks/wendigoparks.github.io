@@ -7,11 +7,12 @@ import { Button } from "@mui/material";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { logOut } from "./Authentication";
+import UserReservations from "./UserReservations";
 
 const MyAccount = () => {
 
     // variable to hold user's data
-    const [userData, setUserData] = React.useState({username:"", email:"", full_name:"",});
+    const [userData, setUserData] = React.useState({username:"", email:"", full_name:"", id:""});
     
     // Allows to switch pages to login screen on log out
     // Also allows to switch pages to login page if user is not already logged in and tries to access My Account page
@@ -79,6 +80,7 @@ const MyAccount = () => {
             <p>Show user's calendar of reservations here:</p>
             <p>Show other users you are following: and make each one clickable to view their schedules. </p>
             <p>Let users put in usernames of other users to follow them here: </p>
+            <UserReservations userId={userData.id} />
         </div>
     )
 }
