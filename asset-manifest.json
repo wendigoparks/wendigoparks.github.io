@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/wendigoparks/static/css/main.6489fd35.css",
-    "main.js": "/wendigoparks/static/js/main.96a9bbe7.js",
-    "index.html": "/wendigoparks/index.html",
-    "main.6489fd35.css.map": "/wendigoparks/static/css/main.6489fd35.css.map",
-    "main.96a9bbe7.js.map": "/wendigoparks/static/js/main.96a9bbe7.js.map"
+    "main.css": "/wendigoparks/wendigoparks.github.io/static/css/main.6489fd35.css",
+    "main.js": "/wendigoparks/wendigoparks.github.io/static/js/main.44354949.js",
+    "index.html": "/wendigoparks/wendigoparks.github.io/index.html",
+    "main.6489fd35.css.map": "/wendigoparks/wendigoparks.github.io/static/css/main.6489fd35.css.map",
+    "main.44354949.js.map": "/wendigoparks/wendigoparks.github.io/static/js/main.44354949.js.map"
   },
   "entrypoints": [
     "static/css/main.6489fd35.css",
-    "static/js/main.96a9bbe7.js"
+    "static/js/main.44354949.js"
   ]
 }
